@@ -1,0 +1,34 @@
+.formElement{
+    display: inline-block !important;
+    margin-right: 25px !important;
+    margin-left: 25px !important;
+    
+    width: 200px !important;
+    height: 40px !important;
+    text-align: center !important;
+    font-size: 15px !important;
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+    color: #fff !important;
+    opacity: 0.5;
+    
+    /* padding-top: 7px !important;
+    padding-bottom: 7px !important; */
+}
+
+.mrB{
+    margin-bottom: 25px !important;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #fff !important;
+    opacity: 1 !important; /* Firefox */
+  }
+  
+  :-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #fff !important;
+  }
+  
+  ::-ms-input-placeholder { /* Microsoft Edge */
+    color: #fff !important;
+  }
