@@ -6,7 +6,7 @@ const auth = require('../utilities/auth');
 
 const pool = require('../utilities/connection')
 
-router.post('/add/:moderator_id', auth, (req, res) => {
+router.post('/add/:moderator_id', auth, (req, res) => { // moderator can add
 
     pool.getConnection( (err, conn) => {
 
@@ -40,7 +40,76 @@ router.post('/add/:moderator_id', auth, (req, res) => {
 });
 
 
-router.
+router.get('/', auth, (req,res) => { // get all venues, will call when user get logged in
+
+    pool.getConnection( (err, conn) => {
+
+        if (err) {
+            conn.release();
+            return res.status(500).end();
+        }
+        
+        conn.query("select * from venues where moderator_id = ?", req.params.moderator_id, (err, results) => {
+            
+            conn.release();
+            if (err) {
+                return res.status(500).end();
+            }
+
+            return res.status(200).json({
+                venues: results
+            })
+        });
+    });
+});
+
+
+
+router.patch('/edit', auth, (req,res) => { // moderator can edit venue details
+
+    pool.getConnection( (err, conn) => {
+
+        if (err) {
+            conn.release();
+            return res.status(500).end();
+        }
+
+        var data = req.body;
+        var sql = "update venues set venue_name=?, image=?, city=?, state=?, country=?, address=?, max_capacity=?. bookingType=? where venue_id =?";
+        
+        conn.query( sql, [data.venue_name, data.image, data.city, data.state, data.country, data.address, data.max_capacity, data.bookingType], (err, result) => {
+
+            conn.release();
+            if (err) {
+                return res.status(500).end();
+            }
+
+            return res.status(200).end(); 
+        });
+    });
+});
+
+
+router.patch('/delete/:venue_id', auth, (req,res) => {
+
+    pool.getConnection( (err, conn) => {
+
+        if (err) {
+            conn.release();
+            return res.status(500).end();
+        }
+
+        conn.query("update venues set staus = 'deleted' where venue_id = ?", req.params.venue_id, (err, result) => {
+
+            conn.release();
+            if (err) {
+                return res.status(500).end();
+            }
+
+            return res.status(200).end();
+        })
+    });
+});
 
 
 

@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express');       //   check get user function
 const router = express.Router();
 
 const step = require('step');
@@ -338,7 +338,7 @@ router.patch('/permit/:user_id', auth, (req, res) => { //  when admin want to un
 });
 
 
-router.patch('/block/:user_id', auth, (req, res) => { // admin can block moderator
+router.patch('/block/:user_id', auth, (req, res) => { // admin can block user
 
     pool.getConnection( (err, conn) => {
 
@@ -386,5 +386,51 @@ router.get('/', auth, (req, res) => { // admin can see all the users
 });
 
 
+router.get('/:status', auth, (req, res) => { // admin can get user on the basis of status
+
+    pool.getConnection( (err, conn) => {
+
+        if(err){
+            conn.release();
+            return res.status(500).end();
+        }
+        
+        conn.query( "select * from users where status = ?", req.params.status, (err, results) => {
+            conn.release();
+            if (err) {
+                return res.status(500).end();
+            }
+
+            return res.status(200).json({
+                users: results
+            });
+        }) 
+
+    });
+})
+
+
+router.get('/:user_type', auth, (req, res) => { 
+
+    pool.getConnection( (err, conn) => {
+
+        if(err){
+            conn.release();
+            return res.status(500).end();
+        }
+        
+        conn.query( "select * from users where user_type", (err, results) => {
+            conn.release();
+            if (err) {
+                return res.status(500).end();
+            }
+
+            return res.status(200).json({
+                users: results
+            });
+        }) 
+
+    });
+})
 
 module.exports = router;

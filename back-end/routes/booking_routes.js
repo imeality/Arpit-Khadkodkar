@@ -7,7 +7,7 @@ var auth = require('../utilities/auth');
 
 var pool = require('../utilities/connection');
 
-router.post('/add/:user_id/:sv_id', auth, (req, res) => {
+router.post('/add/:user_id/:sv_id', auth, (req, res) => { // user add booking
     
     pool.getConnection( (err, conn) => {
 
@@ -38,7 +38,7 @@ router.post('/add/:user_id/:sv_id', auth, (req, res) => {
 
 });
 
-router.get('/', auth, (req, res) => {
+router.get('/', auth, (req, res) => { // get booking for any kind
 
     var sql = "select * from bookings where ";
     var added = false;

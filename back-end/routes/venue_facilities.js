@@ -1,7 +1,25 @@
-const express = require('express');
-const router = express.Router();
-
 const pool = require('../utilities/connection');
+
+function addVenuFacilities (venueFacilities) {
+
+    pool.getConnection( (err, conn) => {
+
+        if (err) {  
+            conn.release();
+            return 'error';
+        }
+
+        conn.query("insert into venueFacilities values (?,?,?,?,?,?,?,?,?,?,?)", venueFacilities, (err, results) => {
+            conn.release();
+
+            if (err) {
+                return 'error';
+            }
+
+            return 'success';
+        });
+    }); 
+}
 
 function getVenueFacilities (venue_id) {
 
@@ -36,7 +54,7 @@ function editVenueFacilities (venue_id, facilities) {
 
         var sql = "update venueFacilities set gym=?, bar=?, restaurant=?, parking=?, wifi=?, disabled_facility=?, bedroom=?, laundry=?, avTechnician=? others=?";
 
-        conn.query(sql, facilities, (err, result) => {
+        conn.query(sql, [facilities, venue_id], (err, result) => {
 
             conn.release();
             if (err) {
@@ -57,7 +75,7 @@ function getVenueIds (facilities) {
             return 'error';
         }
         
-        var sql = "select venue_id from venuesFacilities where gym=?, bar=?, restaurant=?, parking=?, wifi=?, disabled_facility=?, bedroom=?, laundry=?, avTechnician=?";
+        var sql = "select venue_id from venuesFacilities where gym=? or bar=? or restaurant=? or parking=? or wifi=? or disabled_facility=? or bedroom=? or laundry=? or avTechnician=?";
 
         conn.query( sql, facilities, (err, results) => {
             conn.release();

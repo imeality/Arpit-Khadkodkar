@@ -369,7 +369,7 @@ router.get('/temporary', auth, (req, res) => { // admin view all the new moderat
 })
 
 
-router.delete('/delete/newmoderator/:moderator_id', auth, (req, res) => {
+router.delete('/delete/newmoderator/:moderator_id', auth, (req, res) => { // admin can delete temporary moderators
 
     pool.getConnection( (err, conn) => {
 
