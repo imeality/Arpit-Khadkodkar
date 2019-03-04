@@ -128,7 +128,7 @@ router.get('/', auth, (req, res) => { // get booking for any kind
         }
 
         return res.status(200).json({
-            result: results
+            data: results
         });
     
     });

@@ -1,4 +1,4 @@
-const express = require('express');       //   check get user function
+const express = require('express');       
 const router = express.Router();
 
 const step = require('step');
@@ -305,7 +305,7 @@ router.get ('/info/:user_id/:user_type', (req, res) => {  // after get logged in
             }
 
             return res.status(200).json({
-                results: results[0]
+                data: results[0]
             });
         });    
             
@@ -378,7 +378,7 @@ router.get('/', auth, (req, res) => { // admin can see all the users
             }
 
             return res.status(200).json({
-                users: results
+                data: results
             });
         }) 
 
@@ -394,15 +394,15 @@ router.get('/:status', auth, (req, res) => { // admin can get user on the basis 
             conn.release();
             return res.status(500).end();
         }
-        
-        conn.query( "select * from users where status = ?", req.params.status, (err, results) => {
+        var sql = "select users.user_id, user_name, user_email, user_password, user_type, user_address, user_contact, user_uid from users inner join individualUsers on users.user_id = individualUsers.user_id where users.status = ?";
+        conn.query( sql, req.params.status, (err, results) => {
             conn.release();
             if (err) {
                 return res.status(500).end();
             }
 
             return res.status(200).json({
-                users: results
+                data: results
             });
         }) 
 
@@ -410,7 +410,7 @@ router.get('/:status', auth, (req, res) => { // admin can get user on the basis 
 })
 
 
-router.get('/:user_type', auth, (req, res) => { 
+router.get('/:user_type', auth, (req, res) => { // admin can get user on the basis of user_type
 
     pool.getConnection( (err, conn) => {
 
@@ -418,18 +418,25 @@ router.get('/:user_type', auth, (req, res) => {
             conn.release();
             return res.status(500).end();
         }
-        
-        conn.query( "select * from users where user_type", (err, results) => {
+        var sql;
+        if ( req.params.user_type == 'individualUser' ) {
+
+            sql = "select users.user_id, user_name, user_email, user_password, status, user_address, user_contact, user_uid from users inner join individualUsers on users.user_id = individualUsers.user_id"; 
+        } else {
+            sql = "select users.user_id, user_name, user_email, user_password, status, company_name, designation, company_website, contact_num, address from users inner join corporateUsers on users.user_id = corporateUsers.user_id";
+        }
+
+        conn.query ( sql, (err, results) => {
+
             conn.release();
             if (err) {
                 return res.status(500).end();
             }
 
             return res.status(200).json({
-                users: results
-            });
-        }) 
-
+                data: results
+            })
+        });
     });
 })
 

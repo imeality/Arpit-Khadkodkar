@@ -1,96 +1,59 @@
-const pool = require('../utilities/connection');
 
-function addVenuFacilities (venueFacilities) {
+function addVenueFacilities (venueId, venueFacilities, conn) {
 
-    pool.getConnection( (err, conn) => {
-
-        if (err) {  
-            conn.release();
-            return 'error';
-        }
-
-        conn.query("insert into venueFacilities values (?,?,?,?,?,?,?,?,?,?,?)", venueFacilities, (err, results) => {
-            conn.release();
-
-            if (err) {
-                return 'error';
-            }
-
-            return 'success';
-        });
-    }); 
-}
-
-function getVenueFacilities (venue_id) {
-
-    pool.getConnection( (err, conn) => {
+    conn.query("insert into venueFacilities values (?,?,?,?,?,?,?,?,?,?,?)", [venueId, venueFacilities], (err, results) => {
 
         if (err) {
-            conn.release();
-            return 'error';
+            return false;
         }
 
-        conn.query("select * from venueFacilities where venue_id = ?", venue_id, (err, results) => {
-            conn.release();
-
-            if (err) {
-                return 'error';
-            }
-
-            return results[0];
-        })
-    })
-}
-
-
-function editVenueFacilities (venue_id, facilities) {
-
-    pool.getConnection( (err, conn) => {
-
-        if (err) {
-            conn.release();
-            return 'error';
-        }
-
-        var sql = "update venueFacilities set gym=?, bar=?, restaurant=?, parking=?, wifi=?, disabled_facility=?, bedroom=?, laundry=?, avTechnician=? others=?";
-
-        conn.query(sql, [facilities, venue_id], (err, result) => {
-
-            conn.release();
-            if (err) {
-                return 'error';
-            }
-
-            return 'success';
-        });
+        return true;
     });
 }
 
-function getVenueIds (facilities) {
+function getVenueFacilities (venue_id, conn) {
 
-    pool.getConnection ( (err, conn) => {
+    conn.query("select * from venueFacilities where venue_id = ?", venue_id, (err, results) => {
 
         if (err) {
-            conn.release();
             return 'error';
         }
+
+        return results[0];
+    })    
+}
+
+
+function editVenueFacilities (facilities, conn) {
+
+    var sql = "update venueFacilities set gym=?, bar=?, restaurant=?, parking=?, wifi=?, disabled_facility=?, bedroom=?, laundry=?, avTechnician=? others=? where venue_id = ?";
+
+    conn.query(sql, facilities, (err, result) => {
+
+        if (err) {
+            return 'error';
+        }
+
+        return 'success';
+    });
+}
+
+function getVenueIds (facilities, conn) {
+ 
+    var sql = "select venue_id from venuesFacilities where gym=? or bar=? or restaurant=? or parking=? or wifi=? or disabled_facility=? or bedroom=? or laundry=? or avTechnician=?";
+
+    conn.query( sql, facilities, (err, results) => {
         
-        var sql = "select venue_id from venuesFacilities where gym=? or bar=? or restaurant=? or parking=? or wifi=? or disabled_facility=? or bedroom=? or laundry=? or avTechnician=?";
+        if (err) {
+            return 'error';
+        }
 
-        conn.query( sql, facilities, (err, results) => {
-            conn.release();
-            if (err) {
-                return 'error';
-            }
-
-            return {
-                venueIds: results
-            };
-        })
+        return results;
     })
 }
 
 module.exports = {
+    addVenueFacilities: addVenueFacilities,
     getVenueFacilities: getVenueFacilities,
     editVenueFacilities: editVenueFacilities,
     getVenueIds: getVenueIds,
