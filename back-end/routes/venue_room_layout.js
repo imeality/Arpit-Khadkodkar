@@ -44,19 +44,7 @@ function editRoomLayouts (roomLayout, conn) {
 }
 
 
-function getVenueIds (roomLayout, conn) {
 
-    var sql = "select venue_id from venueRoomLayout where banquet=? or u_shape=? or boardroom=? or theatre=? or classroom=? or reception=? or cabaret=?";
-
-    conn.query(sql, [roomLayout, venue_id], (err, results) => {
-
-        if (err) {
-            return 'error';
-        }
-
-        return results;
-    });
-}
 
 module.exports = {
     getRoomLayouts: getRoomLayouts,

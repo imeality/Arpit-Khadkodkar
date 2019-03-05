@@ -135,4 +135,29 @@ router.get('/', auth, (req, res) => { // get booking for any kind
 
 });
 
+
+router.patch('/cancel/:booking_id', auth, (req, res) => {
+
+    pool.getConnection( (err, conn) => {
+
+        if ( err ) {
+            conn.release();
+            return res.status(500).end();
+        }
+
+        var sql = "update bookings set status = 'cancelled' where booking_id = ?";
+        conn.query( sql, req.params.booking_id, (err, result) => {
+
+            conn.release();
+            if ( err ) {
+                return res.status(500).end();
+            }
+
+            return res.status(200).end();
+        })
+    });
+});
+
+
+
 module.exports = router;

@@ -41,19 +41,7 @@ function editVenueTypes (types, conn) { // moderator can edit venue type
    
 }
 
-function getVenueIds (types, conn) { // filter to get all venues for particular venue types
-    
-    var sql = "select venue_id from venuesTypes where hotel=? or conference_centre=? or sports=? or academic=? or cultural=? or bussiness_centre=? or pub=? or restaurant=?";
 
-    conn.query( sql, types, (err, results) => {
-        
-        if (err) {
-            return 'error';
-        }
-
-        return results;
-    })
-}
 
 module.exports = {
     getVenueTypes: getVenueTypes,
