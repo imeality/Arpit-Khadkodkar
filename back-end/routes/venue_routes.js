@@ -93,7 +93,7 @@ router.post('/add/:moderator_id', auth, (req, res) => {
 
         insertIntoVenues
         .then( function(venueId){
-            Promise.all([insertInotVenueFacilities, insertInotVenueType, insertInotVenueRoomLayout]).then( (values) => {
+            Promise.race([insertInotVenueFacilities, insertInotVenueType, insertInotVenueRoomLayout]).then( (values) => {
                 console.log("-- values -- ", values);
                 conn.release();
                 return res.status(200).end();

@@ -1,11 +1,9 @@
 var express = require('express');
 var router = express.Router();
-
 var jwt = require('jsonwebtoken');
-
 var auth = require('../utilities/auth');
-
 var pool = require('../utilities/connection');
+
 
 router.post('/add/:user_id/:sv_id', auth, (req, res) => { // user add booking
     
@@ -37,6 +35,7 @@ router.post('/add/:user_id/:sv_id', auth, (req, res) => { // user add booking
     });
 
 });
+
 
 router.get('/', auth, (req, res) => { // get booking for any kind
 

@@ -1,101 +1,41 @@
-const express = require('express');
-const router = express.Router();
-
+const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const auth = require('../utilities/auth');
-
 const pool = require('../utilities/connection');
+const moment = require('moment');
+
 
 router.post('/login', (req,res) => { // for login
-
     pool.getConnection( (err, conn) => {
-
         if (err) {
             conn.release();
             return res.status(500).end();
         }
-
         var sql = " select * from moderators where email = ? and password = ?";
-        para = req.body;
-        conn.query( sql, [para.email, para.password], (err, results) => {
-            conn.release();
+        var para = req.body;
+        conn.query( sql, [para.email, para.password], (err, results) => {   
             if(err) {
+                conn.release();
+                console.log('----login----',err);
                 return res.status(500).end();
             }
             var len = results.length;
             if( len == 0 ) {
+                conn.release();
                 return res.status(401).json({
                     status: "not exist"
                 })
             }
-
             if ( len == 1 ) {
-                
                 var result = results[0]; 
                 var status = result.status;
-
                 if ( status == 'confirmed' ) {
-                    
-                    let token = jwt.sign(
-                        {
-                            email: email
-                        },
-                        'Just-use-this-string-as-secret',
-                        {
-                            expiresIn: '2hr'
+                    var date = moment().format('LLL');
+                    conn.query("update moderators set last_logged_in =? where moderator_id=?", [date, results[0].moderator_id], (err, result) => {
+                        conn.release();
+                        if(err) {
+                            return res.status(500).end();
                         }
-                    );
-
-                    return res.status(200).json({
-                        token: token,
-                        moderator_id: result.moderator_id,
-                        name: result.name,
-                        contact_num: result.contact_num
-                    })
-                    
-                }
-                if ( status == 'temporary' ) {
-                    return res.status(401).json({
-                        status: "temporary"
-                    })
-                }
-                if ( status == 'blocked' ){
-                    return res.status(401).json({
-                        status: 'blocked'
-                    })
-                }
-                if ( status == 'deleted' ){
-                    return res.status(401).json({
-                        status: 'deleted'
-                    })
-                }
-                
-            }
-
-            if ( len > 1 ) {
-                let found = false, blocked = false, status;
-
-                for ( let i = 0; i++; i<len ) {
-                    if ( result[i].status == 'temporary' || result[i].status == 'confirmed' ) {
-                        found = true;
-                        status = result[i];
-                        break;
-                    }else if( result[i].status == 'blocked' ) {    
-                        blocked = true;
-                        break;
-                    }        
-                }
-
-                if ( found ) {
-
-                    if ( status == 'temporary' ) {
-
-                        return res.status(401).json({
-                            status: "temporary"
-                        })
-
-                    } else {
-
                         let token = jwt.sign(
                             {
                                 email: email
@@ -105,25 +45,25 @@ router.post('/login', (req,res) => { // for login
                                 expiresIn: '2hr'
                             }
                         );
-    
                         return res.status(200).json({
                             token: token,
-                            moderator_id: result.moderator_id,
-                            name: result.name,
-                            contact_num: result.contact_num
+                            moderator_id: results[0].moderator_id,
+                            name: results[0].name,
+                            contact_num: results[0].contact_num
                         })
-
-                    }
-                }else if ( blocked ) {
-
+                    }) 
+                }
+                if ( status == 'temporary' ) {
+                    conn.release();
+                    return res.status(401).json({
+                        status: "temporary"
+                    })
+                } else {
+                    conn.release();
                     return res.status(401).json({
                         status: 'blocked'
                     })
                 }
-
-                return res.status(401).json({
-                    status: 'deleted'
-                })
             }
         })
     });
@@ -139,7 +79,7 @@ router.post('/registration', (req,res) => { // for registration
             return res.status(500).end();
         }
         var data = req.body;
-        var sql = "select status from moderators where email = ?";
+        var sql = "select status from moderators where email = ? and not password = '' ";
 
         conn.query( sql, data.email, (err, results) => {
             
@@ -149,17 +89,13 @@ router.post('/registration', (req,res) => { // for registration
             }
 
             if ( results.length != 0 ) {
-                for ( let i=0; i++; i<len ) {
-                    if ( rows[i].status == 'confirmed' || rows[i].status == 'blocked' || rows[i].status == 'temporary' ) {
-                        conn.release();
-                        return res.status(409).end();  // 409 shows conflict
-                    }
-                }
+                conn.release();
+                return res.status(409).end();  // 409 shows conflict
             }
+            var date = moment().format('LLL');
+            sql = "insert into moderators (name, email, password, contact_num, status, sign_up_date, last_logged_in) values (?,?,?,?, 'temporary',?,'') ";
 
-            sql = "insert into moderators (name, email, password, contact_num, status) values (?,?,?,?, 'temporary') ";
-
-            conn.query( sql, [data.name, data.email, data.password, data.contact_num], (err, results) => {
+            conn.query( sql, [data.name, data.email, data.password, data.contact_num, date], (err, results) => {
                 conn.release();
 
                 if (err) {
@@ -182,7 +118,7 @@ router.delete('/delete/:moderator_id', (req, res) => { // delete account
             return res.status(500).end();
         }
 
-        var sql = "update moderators set status = 'deleted' where moderator_id = ?";
+        var sql = "update moderators set status = 'deleted' and password = '' where moderator_id = ?";
 
         conn.query( sql, req.params.moderator_id, (err, results) => {
 
