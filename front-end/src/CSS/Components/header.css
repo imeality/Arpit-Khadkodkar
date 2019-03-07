@@ -1,0 +1,13 @@
+.bg-img {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("../../images/Project/background-image.jpg"); 
+    
+    height: 100%;
+    
+
+    background-position: center;    
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    /* display: block; */
+    
+}

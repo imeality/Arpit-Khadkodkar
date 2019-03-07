@@ -1,0 +1,9 @@
+.customCarousel{
+    height: 50vh;
+    text-align: center;
+    padding-top: 20vH;
+    color: rgb(201, 182, 182);
+    padding-left: 10vh !important;
+    padding-right: 10vh !important;
+    font-size: 4.4vh !important;
+}

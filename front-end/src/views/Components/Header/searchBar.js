@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
 import {Form, Button, Input} from 'reactstrap';
 
-import '../../CSS/First-Page/searchBar.css'
+import '../../../CSS/Components/searchBar.css';
 
 class SearchBar extends Component{
     
     render () {
 
         return(
+            <div className="centreSearch">
             <Form>
                 <Input 
                     type = "text"
@@ -29,6 +30,7 @@ class SearchBar extends Component{
                     Search
                 </Button>
             </Form>
+            </div>
         );
     }
 }

@@ -32,3 +32,9 @@
   ::-ms-input-placeholder { /* Microsoft Edge */
     color: #fff !important;
   }
+
+  .centreSearch{
+    text-align: center;
+    margin-top: 10vh;
+    margin-bottom: 10vh;
+  }
