@@ -37,6 +37,32 @@ router.post('/add/:user_id/:sv_id', auth, (req, res) => { // user add booking
 });
 
 
+// router.get('/',  (req, res) => {
+
+//     pool.getConnection( (err, conn) => {
+        
+//         if (err) {
+//             conn.release();
+//             return res.status(500).end();
+//         }
+//         console.log(req.body);
+//         conn.query( " select * from bookings where ?", req.body, (err, results) => {
+//             conn.release();
+            
+//             if(err) {
+//                 console.log(err)
+//                 return res.status(500).end();
+//             }
+//             console.log("result ", results);
+//             return res.status(200).json({
+//                 data: results
+//             });
+        
+//         });
+//     });
+// })
+
+
 router.get('/', auth, (req, res) => { // get booking for any kind
 
     var sql = "select * from bookings where ";

@@ -14,12 +14,13 @@ router.post('/add', auth, (req, res) => {
             return res.status(500).end();
         }
 
-        var sql = "insert into enquiries (user_id, venue_id, sv_id, moderator_id, enquiry_type, start_date, end_date, start_time, end_time, budget, attendees) values (?,?,?,?,?,?,?,?,?,?,?)";
+        var sql = "insert into enquiries (user_id, venue_id, sv_id, moderator_id, enquiry_type, start_date, end_date, start_time, end_time, budget, attendees) set ?";
 
         conn.query( sql, req.body, (err, result) => {
 
             conn.release();
             if (err) {             
+                console.log(err);
                 return res.status(500).end();
             }
 
