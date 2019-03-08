@@ -1,3 +1,39 @@
+.bg-img {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("../../../images/Project/background-image.jpg"); 
+    
+    height: 100%;
+    
+
+    background-position: center;    
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    /* display: block; */
+    
+}
+
+.customCarousel{
+    height: 50vh;
+    text-align: center;
+    padding-top: 20vH;
+    color: rgb(201, 182, 182);
+    padding-left: 10vh !important;
+    padding-right: 10vh !important;
+    font-size: 4.4vh !important;
+}
+
+.logo-image{
+    width: 35%;
+    height: 10%;
+   
+    overflow: hidden;
+    margin-top: -6px;
+}
+
+.custom-navbar{
+    color: rgba(255, 255, 255, 0)
+}
+
 .formElement{
     display: inline-block !important;
     margin-right: 25px !important;
@@ -32,8 +68,8 @@
   ::-ms-input-placeholder { /* Microsoft Edge */
     color: #fff !important;
   }
-
-  .centreSearch{
+  
+.centreSearch{
     text-align: center;
     margin-top: 10vh;
     margin-bottom: 10vh;

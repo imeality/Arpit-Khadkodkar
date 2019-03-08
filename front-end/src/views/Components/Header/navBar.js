@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import logo from '../../../images/Project/logo.png';
-import '../../../CSS/Components/navBar.css';
+import '../../../CSS/Components/Header/header.css';
 
 import {
     Collapse,
@@ -41,6 +41,7 @@ class NavigationBar extends Component {
     }
 
     createNavItem (data) {
+       // console.log("ohio ===>  ",<SingleNavItem name = {data.name} link = {data.link} key = {data.name}/>);
       return <SingleNavItem name = {data.name} link = {data.link} key = {data.name}/>;
     }
 
@@ -53,7 +54,7 @@ class NavigationBar extends Component {
         return (
             <div>
                 <Navbar className="custom-navbar" dark expand="sm">
-                    <NavbarBrand className="mr-auto"><img src = {logo} className = "logo-image " /></NavbarBrand>
+                    <NavbarBrand className="mr-auto"><img src = {logo} alt="Venue-Finder" className = "logo-image " /></NavbarBrand>
                     <NavbarToggler onClick={this.toggle} />
                     <Collapse isOpen={this.state.isOpen} navbar> 
                         <Nav className="ml-auto" navbar>

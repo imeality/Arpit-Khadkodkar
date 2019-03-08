@@ -1,0 +1,33 @@
+.footer-block{
+    background-color:#1e2020e3;
+    text-align: center;
+    color: rgba(195, 195, 206, 0.808);
+    padding-top: 7vh;
+    padding-bottom: 2vh;
+}
+
+.cust-ul{
+    margin-top: 2vh;
+    list-style-type: none;
+    margin-bottom: 5vh;
+    padding-left: 0;
+    border: 1px solid rgb(124, 124, 129);
+    border-radius: 1vh;
+    padding-top: 5vh;
+    padding-bottom: 5vh;
+    margin-left:5vh;
+    margin-right: 5vh;
+    box-shadow: .2vh .3vh 2vh rgb(129, 128, 131);
+    box-shadow: .2vw .3vw rgb(129, 128, 131);
+    
+}
+
+
+
+a {
+    color: rgba(182, 182, 189, 0.808) !important;
+}
+
+a:hover {
+    color:rgb(91, 91, 173) !important;
+}

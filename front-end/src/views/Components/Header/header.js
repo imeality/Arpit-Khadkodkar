@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../../CSS/Components/header.css';
+import '../../../CSS/Components/Header/header.css';
 import NavigationBar from './navBar';
 import Carousell from './carousel';
 import SearchBar from './searchBar';

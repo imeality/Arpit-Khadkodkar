@@ -3,10 +3,9 @@ import {
   Carousel,
   CarouselItem,
   CarouselControl,
-  CarouselIndicators,
-  CarouselCaption
+  // CarouselIndicators
 } from 'reactstrap';
-import '../../../CSS/Components/carousel.css';
+import '../../../CSS/Components/Header/header.css';
 
 
 class Carousell extends Component {
@@ -67,7 +66,7 @@ class Carousell extends Component {
         next={this.next}
         previous={this.previous}
       >
-        <CarouselIndicators items={this.props.items} activeIndex={activeIndex} onClickHandler={this.goToIndex} />
+        {/* <CarouselIndicators items={this.props.items} activeIndex={activeIndex} onClickHandler={this.goToIndex} /> */}
         {slides}
         <CarouselControl direction="prev" directionText="Previous" onClickHandler={this.previous} />
         <CarouselControl direction="next" directionText="Next" onClickHandler={this.next} />
