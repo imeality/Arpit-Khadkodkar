@@ -3,7 +3,7 @@ var jwt = require('jsonwebtoken');
 module.exports = (req, res, next) => {
     let token = req.headers['authorization'];
 
-    console.log("inside authorization ---- > > >   ",token)
+    console.log("inside authorization ---- > > >   ",req.headers['authorization']);
 
     if(token.startsWith('Bearer')){
         token = token.slice(7, token.length);
@@ -22,9 +22,6 @@ module.exports = (req, res, next) => {
             }
         })
     }else{
-        return res.json({
-            success:false,
-            message: 'Token is not supplied'
-        })
+        return res.status(401);
     }
 }; 

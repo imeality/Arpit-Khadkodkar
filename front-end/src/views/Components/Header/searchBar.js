@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Form, Button, Input} from 'reactstrap';
 
-import '../../../CSS/Components/Header/header.css';
+//import '../../../CSS/Components/Header/header.css';
 
 class SearchBar extends Component{
     

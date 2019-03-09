@@ -5,7 +5,7 @@ import {
   CarouselControl,
   // CarouselIndicators
 } from 'reactstrap';
-import '../../../CSS/Components/Header/header.css';
+//import '../../../CSS/Components/Header/header.css';
 
 
 class Carousell extends Component {

@@ -18,6 +18,8 @@ router.post('/login', (req, res) => {  // for login
             return  res.status(500).end();
         }
 
+        console.log("we get --> ",req.body);
+
         var data = req.body;
         var email = data.user_email, pass = data.user_password;
         var sql = "select user_id, user_name, user_type, status from users where user_email = ? and user_password = ?";
@@ -33,7 +35,7 @@ router.post('/login', (req, res) => {  // for login
             
             if (len == 0) {
                 conn.release();
-                return res.status(401).josn({
+                return res.status(401).json({
                     status: 'not exists'
                 });
             }

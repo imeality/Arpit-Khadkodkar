@@ -28,7 +28,7 @@ class Footer extends Component {
                     {this.blocks(this.props.blocks)}
                 </Row>
                 <span>
-                    <a href = "">blah! blah! blah!</a>
+                    <a href = "/">blah! blah! blah!</a>
                 </span>
             </Container>
             </div>

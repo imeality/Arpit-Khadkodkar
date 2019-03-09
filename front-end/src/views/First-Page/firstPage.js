@@ -3,11 +3,24 @@ import React, {Component, Fragment} from 'react';
 import Footer from '../Components/Footer/footer';
 import Header from '../Components/Header/header';
 
+import {Route, Switch} from 'react-router-dom';
+
+import About from './about';
+import Login from './login';
+import ContactUs from './contactUs';
+import Home from './home';
+import ListVenue from './listVenue';
+import SignUp from './signUp';
+import TermsAndPolicy from './termsAndPolicy';
+import WhyVenueFinder from './whyVenueFinder';
+import WhyWorkWithUs from './whyWorkWithUs';
+
+
 const header = {
     navigation:[
         {
             "name": "Join",
-            "link": "/join"
+            "link": "/signUp"
         },
         {
             "name": "List Venue",
@@ -15,7 +28,7 @@ const header = {
         },
         {
             "name": "Login",
-            "link": "/loginh"
+            "link": "/login"
         }
     ],
     carouselItem:[
@@ -34,11 +47,11 @@ const footer = {
         },
         {
             "value":"Join",
-            "link":"/join"
+            "link":"/signUp"
         },
         {
             "value":"Why venue-finder",
-            "link":"/userFAQ"
+            "link":"/whyVenueFinder"
         },
     ],
     "Venues":[
@@ -52,7 +65,7 @@ const footer = {
         },
         {
             "value":"Why list with us",
-            "link":"/venueFAQ"
+            "link":"/whyWorkWithUs"
         },
     ],
     "Venue-Finder":[
@@ -62,7 +75,7 @@ const footer = {
         },
         {
             "value":"Contact Us",
-            "link":"/contacUs"
+            "link":"/contactUs"
         },
         {
             "value":"Terms&Policy",
@@ -87,6 +100,18 @@ class FirstPage extends Component {
         return(
             <Fragment>
                 <Header  navigation = {header.navigation} carouselItem = {header.carouselItem}/>
+                <Switch>
+                    < Route exact path = "/" component = {Home} />
+                    < Route path = "/about" component = {About} />
+                    < Route path = "/login" component = {Login} />
+                    < Route path = "/signUp" component = {SignUp} />
+                    < Route path = "/listVenue" component = {ListVenue} />
+                    < Route path = "/contactUs" component = {ContactUs} />
+                    < Route path = "/termsAndPolicy" component = {TermsAndPolicy} />
+                    < Route path = "/whyVenueFinder" component = {WhyVenueFinder} />
+                    < Route path = "/whyWorkWithUs" component = {WhyWorkWithUs} />
+                    < Route component = {Home} />
+                </Switch>
                 <Footer blocks = {footer}/>
             </Fragment>    
         );
