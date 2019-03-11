@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import LoginForm from '../Components/Login-Form/loginForm';
-import axios from 'axios';
-import {Row, Col} from 'reactstrap';
+import {login} from '../../Api/userApi';
+//import {Row, Col} from 'reactstrap';
 
 class Login extends Component {
 
@@ -16,7 +16,7 @@ class Login extends Component {
     }
 
     handleChange = async (state) => {
-        console.log ("   handle chang "  , state.email);
+        //console.log ("   handle chang "  , state.email);
         await this.setState({
             email: state.email,
             password: state.password
@@ -25,7 +25,7 @@ class Login extends Component {
     }
 
     userLogin = () => {
-        console.log(" yes ==> ", this.state);
+        //console.log(" yes ==> ", this.state);
         // var formBody = [];
 // for (var property in this.state) {
 //   var encodedKey = encodeURIComponent(property);
@@ -53,24 +53,21 @@ class Login extends Component {
 
         //     }
         // })
-
-        axios.post('http://localhost:5005/users/login', {
-            user_email: this.state.email,
-            user_password: this.state.password
-        })
+   
+        login(this.state.email, this.state.password)
         .then( res => {
-            if (res.status == 200) {
+            if (res.status === 200) {
                 var data = res.data;
                 localStorage.setItem('user_id', data.user_id);
                 localStorage.setItem('user_type', data.user_type);
                 localStorage.setItem('user_name', data.user_name);
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user_email',this.state.email); 
-                axios.defaults.headers.common['authorization'] = "Bearer " + data.token;
                 
-            } else if ( res.status == 401 ) {
+                console.log("token get set", localStorage.getItem('token'));
+            } else if ( res.status === 401 ) {
                 
-                if (res.data.status == 'not exists') {
+                if (res.data.status === 'not exists') {
                     alert("please check your username or password")
                 } else {
                     alert(' you are blocked contact to know more')
@@ -79,7 +76,10 @@ class Login extends Component {
                 alert( "internal server error " );
             }
         })
-        .then( this.props.history.push('/user'))
+        .then( res => {
+            console.log("--- user in to ---  ", localStorage.getItem('token'));
+            this.props.history.push('/user');
+        });
         
     }
 

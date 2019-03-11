@@ -6,7 +6,6 @@ import Header from '../Components/Header/header';
 import {Route, Switch} from 'react-router-dom';
 
 import About from './about';
-import Login from './login';
 import ContactUs from './contactUs';
 import Home from './home';
 import ListVenue from './listVenue';
@@ -94,16 +93,20 @@ class FirstPage extends Component {
 
         }
     }
+    componentDidMount() {
+        localStorage.removeItem('token');
+    }
 
     render () {
 
         return(
+            
             <Fragment>
                 <Header  navigation = {header.navigation} carouselItem = {header.carouselItem}/>
                 <Switch>
                     < Route exact path = "/" component = {Home} />
                     < Route path = "/about" component = {About} />
-                    < Route path = "/login" component = {Login} />
+                    
                     < Route path = "/signUp" component = {SignUp} />
                     < Route path = "/listVenue" component = {ListVenue} />
                     < Route path = "/contactUs" component = {ContactUs} />

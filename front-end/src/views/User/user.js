@@ -1,8 +1,15 @@
 import React, {Component} from 'react';
 
-export default class User extends Component {
+class User extends Component {
+
+    componentDidMount() {
+        console.log(" this is user");
+    }
 
     render () {
-        return <h1>Success !!!!!!!!</h1>;
+        return <h1 >Yahoooooo !!!</h1>;
     }
 }
+
+
+export default User;

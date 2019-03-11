@@ -18,7 +18,7 @@ router.post('/login', (req, res) => {  // for login
             return  res.status(500).end();
         }
 
-        console.log("we get --> ",req.body);
+        //console.log("we get --> ",req.body);
 
         var data = req.body;
         var email = data.user_email, pass = data.user_password;
@@ -44,7 +44,7 @@ router.post('/login', (req, res) => {  // for login
                 
                 if ( result[0].status == 'active' ) {
 
-                    console.log("--select--", result);
+                    //console.log("--select--", result);
                     var date = moment().format('LLL');
                     conn.query("update users set last_logged_in =? where user_id =?",[date, result[0].user_id],(err, results) => {
 
@@ -53,14 +53,14 @@ router.post('/login', (req, res) => {  // for login
                             return res.status(500).end();
                         }
                         
-                        console.log("--update--", results);
+                        //console.log("--update--", results);
                         const token = jwt.sign(
                             {                
                                 email: email
                             },
                             'Just-use-this-string-as-secret',
                             {
-                                expiresIn: '2hr'
+                                expiresIn: 10
                             }
                         )
                         return res.status(200).json({

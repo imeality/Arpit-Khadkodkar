@@ -3,7 +3,7 @@ var jwt = require('jsonwebtoken');
 module.exports = (req, res, next) => {
     let token = req.headers['authorization'];
 
-    console.log("inside authorization ---- > > >   ",req.headers['authorization']);
+        //console.log("inside authorization  token is ---- > > >   ",req.headers['authorization']);
 
     if(token.startsWith('Bearer')){
         token = token.slice(7, token.length);
@@ -12,16 +12,22 @@ module.exports = (req, res, next) => {
     if(token){
         jwt.verify(token, 'Just-use-this-string-as-secret', (err, decoded) => {
             if(err){
-                return res.json({
+                //console.log(" got an error ")
+                return res.send({
                     success: false,
                     message: 'Token is not valid'
                 })
             }else{
                 req.decoded = decoded;
+                //console.log("decoded  ==> ", decoded);
                 next();
             }
         })
     }else{
-        return res.status(401);
+       // console.log(" auth  status 401 ");
+        return res.send({
+            success: false,
+            message: 'not authorized'
+        });
     }
 }; 
