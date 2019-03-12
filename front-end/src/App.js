@@ -5,6 +5,7 @@ import './App.css';
 import FirstPage from './views/First-Page/firstPage';
 import User from './views/User/user';
 import Login from './views/First-Page/login';
+import Admin from './views/Admin/admin';
 
 import withAuth from './utilities/withAuth';
 
@@ -17,8 +18,9 @@ class App extends Component {
         < Route exact path = "/" component = {FirstPage} />
         < Route path = "/login" component = {Login} />
        < Route path = "/user" component = {withAuth(User)} />
-        {/*  < Route path = "/moderator/:moderator_id" component = {About} />
-        < Route path = "/admin/:admin_id" component = {Admin} /> */}
+        {/*  < Route path = "/moderator/:moderator_id" component = {About} /> */}
+        < Route exact path = "/admin" component = {Admin} /> 
+       
         < Route component = {FirstPage} />
       </Switch>
     );
@@ -26,3 +28,4 @@ class App extends Component {
 }
 
 export default App;
+ 

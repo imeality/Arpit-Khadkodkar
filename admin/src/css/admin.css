@@ -1,0 +1,91 @@
+.sidebar {
+    height: 100%;
+    width: 10vw;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    padding-top: 16px;
+    display: block;
+  }
+  
+  /* Style sidebar links */
+  .sidebar a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #818181;
+    display: block;
+  }
+  
+  /* Style links on mouse-over */
+  .sidebar a:hover {
+    color: #f1f1f1;
+  }
+  
+  /* Add media queries for small screens (when the height of the screen is less than 450px, add a smaller padding and font-size) */
+  @media screen and (max-height: 450px) {
+    .sidebar {padding-top: 15px;}
+    .sidebar a {font-size: 18px;}
+  }
+
+  .sidebar hr{
+    border-top: 1px solid rgb(91, 91, 173) !important;
+  }
+
+ .menuBar{
+     position: relative;
+     display: block !important;
+     background-color: rgb(158, 158, 228);
+ }
+ .menuBar a {
+     color: rgb(61, 24, 211) !important;
+ }
+
+ .menuBar a:hover {
+    color: rgb(132, 39, 238) !important;
+ }
+
+ .cards {
+   position: relative;
+   display: inline-block;
+   height: 22vh;
+   min-width: 28vw;
+   flex-direction: column;
+   background-color: rgb(195, 172, 238);
+    /* margin-left:3vw;  */
+   margin-top: 7vh;
+   border-radius: .6rem;
+   background-image: url("../../images/Project/circle.svg");
+   background-repeat: no-repeat;
+   background-position: right;
+   text-align: center;
+ }
+
+ .cardsOuterDiv {
+   margin-left:  10vw;
+  
+
+   position: relative;
+   min-height: 1px;
+    padding-right: 20px;
+    padding-left: 20px;
+ }
+
+ .cardsText {
+   margin-top: 40px;
+   margin-left: 30px;
+   text-align: left;
+ }
+
+ .cardsText h5,h2 {
+  padding-bottom: 20px;
+  color: whitesmoke;
+ }
+
+ .adminBlock {
+   background-color: #f1edf8;
+   height: 100vh;
+ }
