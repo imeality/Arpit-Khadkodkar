@@ -48,7 +48,6 @@ function editRoomLayouts (roomLayout, conn) {
 
 module.exports = {
     getRoomLayouts: getRoomLayouts,
-    getVenueIds: getVenueIds,
     addRoomLayouts: addRoomLayouts,
     editRoomLayouts: editRoomLayouts,
 }

@@ -3,7 +3,8 @@ const router = require('express').Router();
 const pool = require('../utilities/connection');
 
 const auth = require('../utilities/auth');
-
+var moment = require('moment');
+var date = require('../utilities/date');
 // user
 router.post('/add', auth, (req, res) => {
 
@@ -128,6 +129,33 @@ router.get('/:moderator_id', auth, (req, res) => { // all enquiries for a partic
         })
     });
 });
+
+
+router.get('/count/newEnquiries', auth, (req, res) => { // admin dashboard => new users in yesterday
+
+    pool.getConnection( (err, conn) => {
+
+        if ( err ) {
+            conn.release();
+            return res.status(500).end();
+        }
+
+        var str = date.yesterdayDate();
+
+        var sql = "select count(enquiry_id) as sum from enquiries where create_date like '"+str+"%' ";
+        conn.query( sql, (err, result) => {
+
+            conn.release();
+            if ( err ) {
+                return res.status(500).end();
+            }
+            console.log(" enquiry ocunt => ", result[0].sum);
+            return res.status(200).json({
+                data: result[0].sum
+            });
+        })
+    });
+})
 
 
 

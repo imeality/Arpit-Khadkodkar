@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
 const auth = require('../utilities/auth');
 
 const pool = require('../utilities/connection')
@@ -10,6 +10,7 @@ const venueFacilities = require('./venue_facilities');
 const venueRoomLayouts = require('./venue_room_layout');
 const venueTypes = require('./venue_type');
 
+var moment = require('moment');
 
 function getVenueId (conn, moderator_id, venue_name) {
 
@@ -42,7 +43,8 @@ router.post('/add/:moderator_id', auth, (req, res) => {
             return res.status(500).end();
         }
 
-        const data = req.body, venueId;  //--------------
+        const data = req.body;
+        var venueId;  //--------------
 
         var insertIntoVenues = new Promise ( (resolve, reject) => {
             let sql = "insert into venues (moderator_id, venue_name, image, city, state, country, address, max_capacity, status, ratings, total_bookings, featured, offers, booking_type) values (?,?,?,?,?,?,?,?,'active',0,0,0,0,?)"
@@ -261,7 +263,7 @@ router.delete('/delete/:veueId', auth, (req, res) => {  // moderator can delete 
         })
 
     });
-})
+});
 
 
 router.patch('/halt/:venue_id', (req, res) => { //  halt venue
@@ -292,7 +294,7 @@ router.patch('/halt/:venue_id', (req, res) => { //  halt venue
         })
 
     });
-})
+});
 
 
 router.patch('/unHalt/:venue_id', (req, res) => { // remove halt venue
@@ -323,9 +325,8 @@ router.patch('/unHalt/:venue_id', (req, res) => { // remove halt venue
         })
 
     });
-})
+});
 
-// ---- users function -----
 
 router.get('/:city/:capacity', (req, res) => { // user search through search bar
 
@@ -350,7 +351,7 @@ router.get('/:city/:capacity', (req, res) => { // user search through search bar
             })
         })
     })
-})
+});
 
 
 router.get('/filters', (req, res) => { // user can get venues on the basis of filters
@@ -387,6 +388,30 @@ router.get('/filters', (req, res) => { // user can get venues on the basis of fi
 });
 
 
+router.get('/count/all', (req, res) => { // admin dashboard => get all venues count/all
+    console.log("inside venues listed");
+    pool.getConnection( (err, conn) => {
+
+        if ( err ) {
+            conn.release();
+            return res.status(500).end();
+        }
+        
+        var sql = "select count(venue_id) as sum from venues";
+
+        conn.query( sql, (err, resl) => {
+
+            conn.release();
+            if ( err ) {
+                return res.status(500).end();
+            }
+            console.log(" venues listed ",resl[0].sum)
+            return res.status(200).json({
+                data: resl[0].sum
+            })
+        })
+    })
+});
 
 
 module.exports = router;

@@ -1,11 +1,13 @@
 var express = require('express');
 var router = express.Router();
-var jwt = require('jsonwebtoken');
+// var jwt = require('jsonwebtoken');
 var auth = require('../utilities/auth');
 var pool = require('../utilities/connection');
 
+var moment = require('moment');
+var date = require('../utilities/date');
 
-router.post('/add/:user_id/:sv_id', auth, (req, res) => { // user add booking
+router.post('/add/:user_id/:sv_id', auth, (req, res) => { // user add booking 
     
     pool.getConnection( (err, conn) => {
 
@@ -16,12 +18,12 @@ router.post('/add/:user_id/:sv_id', auth, (req, res) => { // user add booking
                 conn.release();
                 return res.status(500).end();
             }
-
-            sql = "insert into bookings (venue_id, sv_id, moderator_id, user_id, amount, date, status) values (?,?,?,?,?,?,?)";
+            var date = moment().format('LLL');
+            sql = "insert into bookings (venue_id, sv_id, moderator_id, user_id, amount, date, status, date) values (?,?,?,?,?,?,?,?)";
 
             conn.query( 
                 sql, 
-                [results[0].venue_id, req.params.sv_id, results[0].moderator_id, req.params.user_id, req.body.amount, req.body.date, "confirmed"], 
+                [results[0].venue_id, req.params.sv_id, results[0].moderator_id, req.params.user_id, req.body.amount, req.body.date, "confirmed",date], 
                 (err, results) =>{
                     conn.release();
                     if(err){
@@ -171,7 +173,7 @@ router.patch('/cancel/:booking_id', auth, (req, res) => {
         }
 
         var sql = "update bookings set status = 'cancelled' where booking_id = ?";
-        conn.query( sql, req.params.booking_id, (err, result) => {
+        conn.query( sql, (err, result) => {
 
             conn.release();
             if ( err ) {
@@ -183,6 +185,161 @@ router.patch('/cancel/:booking_id', auth, (req, res) => {
     });
 });
 
+
+router.get('/count', auth, (req, res) => { // for admin dashboard => total number of bookings
+    
+    pool.getConnection( (err, conn) => {
+
+        if ( err ) {
+            conn.release();
+            return res.status(500).end();
+        }
+
+        var sql = "select count(booking_id) from bookings";
+        conn.query( sql, (err, result) => {
+
+            conn.release();
+            if ( err ) {
+                return res.status(500).end();
+            }
+
+            return res.status(200).json({
+                data: result
+            });
+        })
+    });
+})
+
+router.get('/count/status/completed', auth, (req, res) => { // bookings number for completed
+
+    pool.getConnection( (err, conn) => {
+
+        if ( err ) {
+            conn.release();
+            return res.status(500).end();
+        }
+
+        var sql = "select count(booking_id) from bookings where status = 'completed'";
+        conn.query( sql, (err, result) => {
+
+            conn.release();
+            if ( err ) {
+                return res.status(500).end();
+            }
+
+            return res.status(200).json({
+                data: result
+            });
+        })
+    });    
+})
+
+
+router.get('/count/status/confirmed', auth, (req, res) => { // bookings number for confirmed
+
+    pool.getConnection( (err, conn) => {
+
+        if ( err ) {
+            conn.release();
+            return res.status(500).end();
+        }
+
+        var sql = "select count(booking_id) from bookings where status = 'confirmed'";
+        conn.query( sql, (err, result) => {
+
+            conn.release();
+            if ( err ) {
+                return res.status(500).end();
+            }
+
+            return res.status(200).json({
+                data: result
+            });
+        })
+    });    
+})
+
+
+router.get('/count/status/cancelled', auth, (req, res) => { // bookings number for cancelled
+
+    pool.getConnection( (err, conn) => {
+
+        if ( err ) {
+            conn.release();
+            return res.status(500).end();
+        }
+
+        var sql = "select count(booking_id) from bookings where status = 'cancelled'";
+        conn.query( sql, (err, result) => {
+
+            conn.release();
+            if ( err ) {
+                return res.status(500).end();
+            }
+
+            return res.status(200).json({
+                data: result
+            });
+        })
+    });    
+})
+
+
+router.get('/count/newBookings', auth, (req, res) => { // admin dashboard => new users in yesterday
+
+    pool.getConnection( (err, conn) => {
+
+        if ( err ) {
+            conn.release();
+            return res.status(500).end();
+        }
+
+        var str = date.yesterdayDate();
+
+        var sql = "select count(booking_id) as sum from bookings where status = 'confirmed' and create_date like '"+str+"%' ";
+        conn.query( sql, (err, result) => {
+
+            conn.release();
+            if ( err ) {
+                return res.status(500).end();
+            }
+            console.log(" count new bookings => ", result);
+            return res.status(200).json({
+                data: result[0].sum
+            });
+        })
+    });
+})
+
+
+// router.get('/count/average', auth, (req, res) => { // admin dashboard to calculate growth
+    
+//     pool.getConnection( (err, conn) => {
+
+//         if ( err ) {
+//             conn.release();
+//             return res.status(500).end();
+//         }
+
+//         var date = moment.subtract(1, 'days');
+//         date = date.split(" ");
+
+//         var str = ""+date[0]+" "+date[1]+" "+date[2];
+
+//         var sql = "select count(user_id) from users where status = 'active' and date like '"+str+"%' ";
+//         conn.query( sql, (err, result) => {
+
+//             conn.release();
+//             if ( err ) {
+//                 return res.status(500).end();
+//             }
+
+//             return res.status(200).json({
+//                 data: result
+//             });
+//         })
+//     });
+// })
 
 
 module.exports = router;

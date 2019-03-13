@@ -4,8 +4,10 @@ import {Form, Container, Button, Input, FormGroup, Label} from 'reactstrap';
 // import InputEmail from '../Form/inputEmail';
 // import InputPassword from '../Form/inputPassword';
 
-import {login} from '../../api';
+import {login} from '../../api/api';
+// import instance from '../../config/axios-config';
 
+import axios from 'axios';
 
 class Login extends Component {
 
@@ -22,6 +24,8 @@ class Login extends Component {
         this.validatePassword = this.validatePassword.bind(this);
         
     }
+
+  
 
      validateEmail (event) {
 
@@ -76,9 +80,46 @@ class Login extends Component {
     
     onclick = (event) => {
         event.preventDefault();
-        login(this.state.id, this.state.password)
-    }
+        login(this.state.email, this.state.password)
+        .then(
+            res => {
+            
+                    var data = res.data.data[0];
+                    localStorage.setItem('id', data.id);
+                    localStorage.setItem('name', data.user_name);
+                    localStorage.setItem('token', res.data.token);
+                    localStorage.setItem('email',data.email); 
+                    console.log(" data we get is ", res.status)
+                    console.log("token get set", localStorage.getItem('token'));
+                 
+            }
+        )   
+        .then( res => {
 
+            // instance.interceptors.request.use( (config) => {
+            //     config.headers.Authorization = "Bearer " + localStorage.getItem('token');
+            //     return config;
+            // },
+            // (error) => {
+            //     return Promise.reject(error);
+            // });
+            // axios.defaults.headers.common['authorization'] = "Bearer " + localStorage.getItem('token');
+        }) 
+        
+        .then( res => {
+            
+            this.props.history.push('/admin')
+        })
+        .catch( error => {
+            if (error.response.status === 401) {
+                alert( "email or password is incorrect" );
+            } else {
+                alert( "internal server error " );
+            }
+            throw error;
+        });
+    }
+    
     render () {
 
         return (

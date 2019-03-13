@@ -46,6 +46,5 @@ function editVenueTypes (types, conn) { // moderator can edit venue type
 module.exports = {
     getVenueTypes: getVenueTypes,
     editVenueTypes: editVenueTypes,
-    getVenueIds: getVenueIds,
     addVenuTypes: addVenuTypes,
 }

@@ -3,11 +3,7 @@ import React from 'react';
 
 const Cards = (props) => {
 
-    const divStyle = {
-        color: "black",
-        height: "100px",
-        width: "100px"
-    }
+
     return (
         <div className="cards">
             <div className="cardsText">
@@ -18,4 +14,4 @@ const Cards = (props) => {
     );
 }
 
-export default Cards;
+export default Cards; 

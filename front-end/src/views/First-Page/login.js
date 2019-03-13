@@ -56,7 +56,7 @@ class Login extends Component {
    
         login(this.state.email, this.state.password)
         .then( res => {
-            if (res.status === 200) {
+           
                 var data = res.data;
                 localStorage.setItem('user_id', data.user_id);
                 localStorage.setItem('user_type', data.user_type);
@@ -65,9 +65,16 @@ class Login extends Component {
                 localStorage.setItem('user_email',this.state.email); 
                 
                 console.log("token get set", localStorage.getItem('token'));
-            } else if ( res.status === 401 ) {
+            
+        })
+        .then( res => {
+            console.log("--- user in to ---  ", localStorage.getItem('token'));
+            this.props.history.push('/user');
+        })
+        .catch ( (error) => {
+            if ( error.response.status === 401 ) {
                 
-                if (res.data.status === 'not exists') {
+                if (error.response.data.status === 'not exists') {
                     alert("please check your username or password")
                 } else {
                     alert(' you are blocked contact to know more')
@@ -76,10 +83,6 @@ class Login extends Component {
                 alert( "internal server error " );
             }
         })
-        .then( res => {
-            console.log("--- user in to ---  ", localStorage.getItem('token'));
-            this.props.history.push('/user');
-        });
         
     }
 

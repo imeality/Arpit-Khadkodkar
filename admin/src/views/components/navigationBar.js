@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Link} from 'react-router-dom';
+// import {Link} from 'react-router-dom';
 // import {NavbarToggler, Collapse} from 'reactstrap';
 
 export default class NavigationBar extends React.Component {

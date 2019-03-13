@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const auth = require('../utilities/auth');
 const pool = require('../utilities/connection');
 const moment = require('moment');
+// var date = require('../utilities/date');
 
 
 router.post('/login', (req,res) => { // for login
@@ -297,7 +298,31 @@ router.get('/temporary', auth, (req, res) => { // admin view all the new moderat
             }
 
             return res.status(200).json({
-                moderators: results
+                data: results
+            });
+        }) 
+
+    });
+})
+
+
+router.get('/count/temporary', auth, (req, res) => { // admin dashboard => count of all requests
+
+    pool.getConnection( (err, conn) => {
+
+        if(err){
+            conn.release();
+            return res.status(500).end();
+        }
+        
+        conn.query( "select count(moderator_id) as sum from moderators where status = 'temporary'", (err, results) => {
+            conn.release();
+            if (err) {
+                return res.status(500).end();
+            }
+            console.log("moderaotor count => ",results[0].sum);
+            return res.status(200).json({
+                data: results[0].sum
             });
         }) 
 

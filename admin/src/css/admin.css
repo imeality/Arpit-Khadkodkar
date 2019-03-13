@@ -5,7 +5,7 @@
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #111;
+    background-color: rgb(13, 13, 44);
     overflow-x: hidden;
     padding-top: 16px;
     display: block;
@@ -36,13 +36,15 @@
   }
 
  .menuBar{
-     position: relative;
+     position: relative !important;
      display: block !important;
-     background-color: rgb(158, 158, 228);
+     background-color: rgb(128, 128, 235);
+     
  }
  .menuBar a {
      color: rgb(61, 24, 211) !important;
- }
+     float: right;
+   }
 
  .menuBar a:hover {
     color: rgb(132, 39, 238) !important;
@@ -54,11 +56,12 @@
    height: 22vh;
    min-width: 28vw;
    flex-direction: column;
-   background-color: rgb(195, 172, 238);
+   /* background-color: rgb(195, 172, 238); */
+   background-color: rgb(160, 116, 243);
     /* margin-left:3vw;  */
    margin-top: 7vh;
    border-radius: .6rem;
-   background-image: url("../../images/Project/circle.svg");
+   background-image: url("../images/project/circle.svg");
    background-repeat: no-repeat;
    background-position: right;
    text-align: center;
@@ -69,7 +72,7 @@
   
 
    position: relative;
-   min-height: 1px;
+   min-height: 1px; 
     padding-right: 20px;
     padding-left: 20px;
  }
@@ -88,4 +91,8 @@
  .adminBlock {
    background-color: #f1edf8;
    height: 100vh;
+ }
+
+ .cards:hover {
+  background-color: rgb(116, 52, 235);
  }

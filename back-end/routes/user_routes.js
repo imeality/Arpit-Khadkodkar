@@ -7,6 +7,7 @@ var pool = require('../utilities/connection');
 var Promise = require('promise');
 var moment = require('moment');
 
+var date = require('../utilities/date');
 
 router.post('/login', (req, res) => {  // for login
     
@@ -17,7 +18,7 @@ router.post('/login', (req, res) => {  // for login
             conn.release();
             return  res.status(500).end();
         }
-
+ 
         //console.log("we get --> ",req.body);
 
         var data = req.body;
@@ -60,7 +61,7 @@ router.post('/login', (req, res) => {  // for login
                             },
                             'Just-use-this-string-as-secret',
                             {
-                                expiresIn: 10
+                                expiresIn: '2hr'
                             }
                         )
                         return res.status(200).json({
@@ -475,5 +476,64 @@ router.get('/:user_type', auth, (req, res) => { // admin can get user on the bas
         });
     });
 })
+
+
+
+router.get('/count/newUsers', auth, (req, res) => { // admin dashboard => new users in yesterday
+
+    pool.getConnection( (err, conn) => {
+
+        if ( err ) {
+            conn.release();
+            return res.status(500).end();
+        }
+
+        var str = date.yesterdayDate();
+ 
+        var sql = "select count(user_id) as sum from users where status = 'active' and sign_up_date like '"+str+"%' ";
+        conn.query( sql, (err, result) => {
+
+            conn.release();
+            if ( err ) {
+                return res.status(500).end();
+            }
+            console.log(" count new users => ", result);
+            return res.status(200).json({
+                data: result[0].sum
+            });
+        })
+    });
+})
+
+
+// router.get('/count/average', auth, (req, res) => { // admin dashboard to calculate growth
+    
+//     pool.getConnection( (err, conn) => {
+
+//         if ( err ) {
+//             conn.release();
+//             return res.status(500).end();
+//         }
+
+//         var date = moment.subtract(1, 'days');
+//         date = date.split(" ");
+
+//         var str = ""+date[0]+" "+date[1]+" "+date[2];
+
+//         var sql = "select avg(sum) from (select count(user_id) as sum from users where status = 'active' group by date like '"+str+"%') as average ";
+//         conn.query( sql, (err, result) => {
+
+//             conn.release();
+//             if ( err ) {
+//                 return res.status(500).end();
+//             }
+
+//             return res.status(200).json({
+//                 data: result
+//             });
+//         })
+//     });
+// })
+
 
 module.exports = router;
