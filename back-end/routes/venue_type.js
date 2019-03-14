@@ -26,9 +26,9 @@ function getVenueTypes (venue_id, conn) { // when retrieving information of venu
 }
 
 
-function editVenueTypes (types, conn) { // moderator can edit venue type
+function editVenueTypes (types, venue_id, conn) { // moderator can edit venue type
 
-    var sql = "update venueType set hotel=?, conference_centre=?, sports=?, academic=?, cultural=?, bussiness_centre=?, pub=?, restaurant=? where venue_id=?";
+    var sql = "update venueType set ? where venue_id=?";
 
     conn.query(sql, [types, venue_id], (err, result) => {
 

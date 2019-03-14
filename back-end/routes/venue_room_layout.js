@@ -29,9 +29,9 @@ function addRoomLayouts (venueId, roomLayout, conn) {
 }
 
 
-function editRoomLayouts (roomLayout, conn) {
+function editRoomLayouts (roomLayout, venue_id, conn) {
 
-    var sql = "update venueRoomLayout set banquet=?, u_shape=?, boardroom=?, theatre=?, classroom=?, reception=?, cabaret=? where venue_id=?";
+    var sql = "update venueRoomLayout set ? where venue_id=?";
 
     conn.query(sql, [roomLayout, venue_id], (err, result) => {
 
