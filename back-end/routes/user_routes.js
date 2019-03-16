@@ -85,13 +85,6 @@ router.post('/login', (req, res) => {  // for login
     })
 })
 
-// registration :-
-// 1. check email exist or not
-// 2. check rows.length 
-// 3. insert into users
-// 4. get user_id from users
-// 5. insert into user type table
-
 router.post('/registration', (req,res) => {  // for registration
     
     pool.getConnection((err, conn) => {
@@ -184,6 +177,31 @@ router.post('/registration', (req,res) => {  // for registration
     });
 });
 
+router.get('/count/newUsers', auth, (req, res) => { // admin dashboard => new users in yesterday
+
+    pool.getConnection( (err, conn) => {
+
+        if ( err ) {
+            conn.release();
+            return res.status(500).end();
+        }
+
+        var str = date.yesterdayDate();
+ 
+        var sql = "select count(user_id) as sum from users where status = 'active' and sign_up_date like '"+str+"%' ";
+        conn.query( sql, (err, result) => {
+
+            conn.release();
+            if ( err ) {
+                return res.status(500).end();
+            }
+            console.log(" count new users => ", result);
+            return res.status(200).json({
+                data: result[0].sum
+            });
+        })
+    });
+})
 
 router.delete('/delete/:user_id', (req,res) => {   // when user delete its account
 
@@ -216,7 +234,6 @@ router.delete('/delete/:user_id', (req,res) => {   // when user delete its accou
     });
 
 });
-
 
 router.patch('/edit/:user_id/:user_type', (req, res) => {  // for edit profile
 
@@ -261,7 +278,6 @@ router.patch('/edit/:user_id/:user_type', (req, res) => {  // for edit profile
     })
 
 })
-
 
 router.post('/checkPassword/:user_id', (req, res) => {  // when user want to update password first needs to verify it
 
@@ -318,7 +334,6 @@ router.post('/editPassword/:user_id', (req, res) => {  //  when user want to edi
 
 })
 
-
 router.get ('/info/:user_id/:user_type', (req, res) => {  // after get logged in user needs the info
 
     pool.getConnection ( (err,conn) => {
@@ -350,7 +365,6 @@ router.get ('/info/:user_id/:user_type', (req, res) => {  // after get logged in
 
 });
 
-
 router.patch('/permit/:user_id', auth, (req, res) => { //  when admin want to unblock user
 
     pool.getConnection( (err, conn) => {
@@ -373,7 +387,6 @@ router.patch('/permit/:user_id', auth, (req, res) => { //  when admin want to un
         })
     });
 });
-
 
 router.patch('/block/:user_id', auth, (req, res) => { // admin can block user
 
@@ -398,22 +411,23 @@ router.patch('/block/:user_id', auth, (req, res) => { // admin can block user
     });
 })
 
-
-router.get('/', auth, (req, res) => { // admin can see all the users
+router.get('/all/:rowsCount/:offset', auth, (req, res) => { // admin can see all the users
 
     pool.getConnection( (err, conn) => {
 
         if(err){
             conn.release();
+            console.log(err);
             return res.status(500).end();
         }
         
-        conn.query( "select * from users", (err, results) => {
+        conn.query( "select * from users limit ? offset ?",[parseInt(req.params.rowsCount),parseInt(req.params.offset)], (err, results) => {
             conn.release();
             if (err) {
+                console.log(err);
                 return res.status(500).end();
             }
-
+            // console.log(results);
             return res.status(200).json({
                 data: results
             });
@@ -422,8 +436,7 @@ router.get('/', auth, (req, res) => { // admin can see all the users
     });
 });
 
-
-router.get('/:status', auth, (req, res) => { // admin can get user on the basis of status
+router.get('/status/:status', auth, (req, res) => { // admin can get user on the basis of status
 
     pool.getConnection( (err, conn) => {
 
@@ -446,8 +459,7 @@ router.get('/:status', auth, (req, res) => { // admin can get user on the basis 
     });
 })
 
-
-router.get('/:user_type', auth, (req, res) => { // admin can get user on the basis of user_type
+router.get('/userType/:user_type', auth, (req, res) => { // admin can get user on the basis of user_type
 
     pool.getConnection( (err, conn) => {
 
@@ -476,64 +488,6 @@ router.get('/:user_type', auth, (req, res) => { // admin can get user on the bas
         });
     });
 })
-
-
-
-router.get('/count/newUsers', auth, (req, res) => { // admin dashboard => new users in yesterday
-
-    pool.getConnection( (err, conn) => {
-
-        if ( err ) {
-            conn.release();
-            return res.status(500).end();
-        }
-
-        var str = date.yesterdayDate();
- 
-        var sql = "select count(user_id) as sum from users where status = 'active' and sign_up_date like '"+str+"%' ";
-        conn.query( sql, (err, result) => {
-
-            conn.release();
-            if ( err ) {
-                return res.status(500).end();
-            }
-            console.log(" count new users => ", result);
-            return res.status(200).json({
-                data: result[0].sum
-            });
-        })
-    });
-})
-
-
-// router.get('/count/average', auth, (req, res) => { // admin dashboard to calculate growth
-    
-//     pool.getConnection( (err, conn) => {
-
-//         if ( err ) {
-//             conn.release();
-//             return res.status(500).end();
-//         }
-
-//         var date = moment.subtract(1, 'days');
-//         date = date.split(" ");
-
-//         var str = ""+date[0]+" "+date[1]+" "+date[2];
-
-//         var sql = "select avg(sum) from (select count(user_id) as sum from users where status = 'active' group by date like '"+str+"%') as average ";
-//         conn.query( sql, (err, result) => {
-
-//             conn.release();
-//             if ( err ) {
-//                 return res.status(500).end();
-//             }
-
-//             return res.status(200).json({
-//                 data: result
-//             });
-//         })
-//     });
-// })
 
 
 module.exports = router;

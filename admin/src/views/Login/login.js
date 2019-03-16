@@ -7,7 +7,7 @@ import {Form, Container, Button, Input, FormGroup, Label} from 'reactstrap';
 import {login} from '../../api/api';
 // import instance from '../../config/axios-config';
 
-import axios from 'axios';
+// import axios from 'axios';
 
 class Login extends Component {
 
