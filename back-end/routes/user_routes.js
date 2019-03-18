@@ -215,14 +215,14 @@ router.delete('/delete/:user_id', (req,res) => {   // when user delete its accou
             });
         }
 
-        var sql = "update users set status = 'deleted' and password = '' where user_id = ?";
+        var sql = "update users set status = 'deleted' , user_password = '' where user_id = ?";
         
-        conn.query( sql, req.params.user_id, (error, results) => {
+        conn.query( sql, parseInt(req.params.user_id), (error, results) => {
             
             conn.release();
             if(error){
                 
-                console.log("error  ", err);
+                console.log("error  ", error);
                 return res.status(500).json({
                     error: err
                 });
@@ -233,6 +233,74 @@ router.delete('/delete/:user_id', (req,res) => {   // when user delete its accou
         })
     });
 
+});
+
+router.patch('/editInfo/:user_id', (req, res) => { 
+
+    pool.getConnection( (err, conn) => {
+        if(error){
+            conn.release();
+            console.log("error  ", err);
+            return res.status(500).end();
+        }
+        
+        var sql = "update users set ? where user_id = ?";
+        conn.query(sql, [req.body, req.params.user_id], (err, result) => {
+
+            conn.release();
+            if(err){
+                
+                return res.status(500).end();
+            }
+
+            return res.status(200).end();
+        })
+    })
+});
+
+router.patch('/editIndividualUser/:user_id', (req, res) => { 
+
+    pool.getConnection( (err, conn) => {
+        if(error){
+            conn.release();
+            console.log("error  ", err);
+            return res.status(500).end();
+        }
+        
+        var sql = "update individualUsers set ? where user_id = ?";
+        conn.query(sql, [req.body, req.params.user_id], (err, result) => {
+
+            conn.release();
+            if(err){
+                console.log("error ",err);   
+                return res.status(500).end();
+            }
+
+            return res.status(200).end();
+        })
+    })
+});
+
+router.patch('/editCorporateUser/:user_id', (req, res) => { 
+
+    pool.getConnection( (err, conn) => {
+        if(err){
+            conn.release();
+            console.log("error  ", err);
+            return res.status(500).end();
+        }
+        
+        var sql = "update corporateUsers set ? where user_id = ?";
+        conn.query(sql, [req.body, req.params.user_id], (err, result) => {
+
+            conn.release();
+            if(err){ 
+                return res.status(500).end();
+            }
+
+            return res.status(200).end();
+        })
+    })
 });
 
 router.patch('/edit/:user_id/:user_type', (req, res) => {  // for edit profile
@@ -365,7 +433,7 @@ router.get ('/info/:user_id/:user_type', (req, res) => {  // after get logged in
 
 });
 
-router.patch('/permit/:user_id', auth, (req, res) => { //  when admin want to unblock user
+router.patch('/unblock/:user_id', auth, (req, res) => { //  when admin want to unblock user
 
     pool.getConnection( (err, conn) => {
 
