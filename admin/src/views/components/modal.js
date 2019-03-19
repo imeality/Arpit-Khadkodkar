@@ -1,41 +1,47 @@
 import React from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, Input, FormGroup, Label } from 'reactstrap';
 
-class ShowForm extends React.PureComponent {
-
-    render() {
-
-    return Object.keys(this.props.data).map ( (element, index) => {
-        let formValues = this.props.formValues
-        return <FormGroup>
-            
-            <Label key = {index} for = {element}>{element}</Label>
-            <Input  key = {element} id = {element} value = {this.props.data[element]} />
-            {this.props.newElementAdded(element, this.props.data[element])}
-        </FormGroup> 
-    })
-}
-}
-
 class EditModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       modal: false,
-      formValues:[{name:"", value:""}],
-      notBlank:false
+      formValues:{},
+      length:0
     };
-
     this.toggle = this.toggle.bind(this);
   }
 
-  newElementAdded = (element,val) => {
-        
- 
-        this.setState( prevState => ({
+  // shouldComponentUpdate( nextProps, nextState) {
+  //   return next
+  // }
 
-            formValues:[...prevState.formValues, {name:element, value:val}]
-        }),() => {console.log(this.state.formValues)})
+  componentWillMount() {
+    setTimeout( () => {
+      this.setFormValues();
+    }, this.props.wait)
+  }
+
+  setFormValues() {
+    var len = Object.keys(this.props.data).length;
+    this.setState({
+      formValues: this.props.data,
+      length:len
+    })
+
+  }
+
+  handleChange = (event) => {
+    
+
+    let stateValues = this.state.formValues;
+    stateValues[event.target.id] = event.target.value;
+
+
+    this.setState({
+      formValues: stateValues
+    })
+    
   }
 
   toggle() {
@@ -45,21 +51,42 @@ class EditModal extends React.Component {
   }
 
   onclick = (e) => {
-      console.log(e);
+    
+    let id = this.state.formValues[this.props.id];
+    let data = this.state.formValues;
+    
+    //console.log(" ho ho ho => ", data);
+    this.props.edit(id, data, this.props.index);
   }
 
   render() {
-      let {inputValues} = this.state;
+    
+    const formElement = (name, value, index) => {
+      return <FormGroup key = {index}>
+        <Label>{name}</Label>
+        <Input id = {name} onChange = {(e) => this.handleChange(e)} value={value}/>
+      </FormGroup>
+    }
+
+    const showForm = () => {
+      let {formValues} = this.state;
+      return <Form> 
+      {
+        Object.keys(formValues).map( (element, index) => {
+          return formElement(element, formValues[element], index)
+        })
+      }
+      <Input type="submit" value="Submit" onClick = {(e) => this.onclick(e)} /> 
+      </Form>
+    }
+
     return (
       <div>
         <Button color="secondary" onClick={this.toggle}>{this.props.buttonLabel}</Button>
         <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
           <ModalHeader toggle={this.toggle}>{this.props.modalTitle}</ModalHeader>
           <ModalBody>
-            <Form >
-                <ShowForm formValues = {this.state.formValues} newElementAdded = {this.newElementAdded} data = {this.props.data} />
-                <Button onClick = {this.onclick}>Submit</Button>
-            </Form>
+            {showForm()}
           </ModalBody>
           <ModalFooter>
             <Button color="primary" onClick={this.toggle}>Do Something</Button>

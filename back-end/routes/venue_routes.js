@@ -87,13 +87,13 @@ router.get('/filters/:skipRows/:numberOfRows', (req, res) => { // user can get v
 });
 
 router.get('/count/all', (req, res) => { // admin dashboard => get all venues count/all
-    console.log("inside venues listed");
+   // console.log("inside venues listed");
     pool.getConnection( (err, conn) => {
 
         if ( err ) {
             conn.release();
             return res.status(500).end();
-        }
+        } 
         
         var sql = "select count(venue_id) as sum from venues";
 
@@ -103,7 +103,7 @@ router.get('/count/all', (req, res) => { // admin dashboard => get all venues co
             if ( err ) {
                 return res.status(500).end();
             }
-            console.log(" venues listed ",resl[0].sum);
+          //  console.log(" venues listed ",resl[0].sum);
             return res.status(200).json({
                 data: resl[0].sum
             })

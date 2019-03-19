@@ -209,7 +209,7 @@ router.get('/count/totalRevenue', (req, res) => { // admin dashboard => total Re
                 return res.status(500).end();
             }
 
-            console.log("total revenue result ", results);
+          //  console.log("total revenue result ", results);
 
             return res.status(200).json({
                 data: results[0].sum,

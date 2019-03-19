@@ -320,7 +320,7 @@ router.get('/count/temporary', auth, (req, res) => { // admin dashboard => count
             if (err) {
                 return res.status(500).end();
             }
-            console.log("moderaotor count => ",results[0].sum);
+         //   console.log("moderaotor count => ",results[0].sum);
             return res.status(200).json({
                 data: results[0].sum
             });

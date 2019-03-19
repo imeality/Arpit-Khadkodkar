@@ -149,7 +149,7 @@ router.get('/count/newEnquiries', auth, (req, res) => { // admin dashboard => ne
             if ( err ) {
                 return res.status(500).end();
             }
-            console.log(" enquiry ocunt => ", result[0].sum);
+          //  console.log(" enquiry ocunt => ", result[0].sum);
             return res.status(200).json({
                 data: result[0].sum
             });

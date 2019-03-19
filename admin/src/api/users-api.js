@@ -27,3 +27,7 @@ export const editIndividualUser = (id, data) => {
 export const editCorporateUser = (id, data) => {
     return instance.patch('/users/editCorporateUser/'+id, data);
 }
+
+export const getRowsCount = () => {
+    return instance.get('/users/rowsCount/');
+}

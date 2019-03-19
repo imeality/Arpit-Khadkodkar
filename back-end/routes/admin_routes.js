@@ -7,10 +7,10 @@ const auth = require('../utilities/auth');
 
 router.post('/login', (req, res) => {
 
-    console.log(" admin login got called ", req.body.email);
+    //console.log(" admin login got called ", req.body.email);
     pool.getConnection( (err, conn) => {
-        console.log( " inside pool " );
-        if (err) {
+      //  console.log( " inside pool " );
+        if (err) { 
             conn.release();
             console.log(" pool error --> ", err);
             return res.status(500).end();

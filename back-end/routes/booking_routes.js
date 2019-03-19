@@ -303,7 +303,7 @@ router.get('/count/newBookings', auth, (req, res) => { // admin dashboard => new
             if ( err ) {
                 return res.status(500).end();
             }
-            console.log(" count new bookings => ", result);
+         //   console.log(" count new bookings => ", result);
             return res.status(200).json({
                 data: result[0].sum
             });

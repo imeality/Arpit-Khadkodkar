@@ -9,6 +9,29 @@ var moment = require('moment');
 
 var date = require('../utilities/date');
 
+router.get('/rowsCount', (req, res) => {
+    pool.getConnection( (err, conn) => {
+
+        if ( err ) {
+            conn.release();
+            return res.status(500).end();
+        }
+ 
+        var sql = "select count(user_id) as sum from users";
+        conn.query( sql, (err, result) => {
+
+            conn.release();
+            if ( err ) {
+                return res.status(500).end();
+            }
+            //console.log(" count new users => ", result);
+            return res.status(200).json({
+                data: result[0].sum
+            });
+        })
+    }); 
+})
+
 router.post('/login', (req, res) => {  // for login
     
     pool.getConnection((err, conn) => {
@@ -238,7 +261,7 @@ router.delete('/delete/:user_id', (req,res) => {   // when user delete its accou
 router.patch('/editInfo/:user_id', (req, res) => { 
 
     pool.getConnection( (err, conn) => {
-        if(error){
+        if(err){
             conn.release();
             console.log("error  ", err);
             return res.status(500).end();
@@ -556,6 +579,4 @@ router.get('/userType/:user_type', auth, (req, res) => { // admin can get user o
         });
     });
 })
-
-
 module.exports = router;
