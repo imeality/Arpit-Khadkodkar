@@ -16,13 +16,15 @@ class EditModal extends React.Component {
   //   return next
   // }
 
-  componentWillMount() {
-    setTimeout( () => {
-      this.setFormValues();
-    }, this.props.wait)
+  componentDidMount() {
+      setTimeout(() => {
+        this.setFormValues();
+        console.log("data in modal ",this.state.formValues);
+      },200);
   }
 
   setFormValues() {
+    //console.log("data received => ",this.props.data);
     var len = Object.keys(this.props.data).length;
     this.setState({
       formValues: this.props.data,
@@ -31,12 +33,16 @@ class EditModal extends React.Component {
 
   }
 
+  componentDidUpdate(prevProps) {
+    if(this.props.data !== prevProps.data) {
+      this.setFormValues();
+    }
+  }
+
   handleChange = (event) => {
-    
 
     let stateValues = this.state.formValues;
     stateValues[event.target.id] = event.target.value;
-
 
     this.setState({
       formValues: stateValues

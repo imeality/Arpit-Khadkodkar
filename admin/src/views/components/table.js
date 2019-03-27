@@ -51,7 +51,7 @@ export default class CustomTable extends React.Component {
                 }  
                  
                 <td>{this.props.provided === "true"? blocked === true ? <Button onClick = {() => this.props.unblock(value, index)} style = {{ marginBottom:5}} >Unblock</Button>:<Button onClick = {() => this.props.block(value, index)} style = {{ marginBottom:5}}>Block</Button> : ""}
-                <Button style = {{ marginBottom:5}} onClick = {() => this.props.deleteIt(value, index)}>Delete</Button><EditModal index={index} id = {this.props.id} edit = {this.props.edit} wait = {100} data = {row} modalTitle = "Edit Info" buttonLabel = "Edit"/></td>   
+                <Button style = {{ marginBottom:5}} onClick = {() => this.props.deleteIt(value, index)}>Delete</Button><EditModal index={index} id = {this.props.id} edit = {this.props.edit} data = {row} modalTitle = "Edit Info" buttonLabel = "Edit"/></td>   
                 
             </React.Fragment>
         }

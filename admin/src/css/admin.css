@@ -149,3 +149,15 @@
  .tableHeading {
    text-align: center !important;
  }
+
+ .paginationItem {
+   margin-top: 15px;
+   margin-right: 5px;
+ }
+ .paginationItem button {
+   z-index: 9;
+ }
+
+ .paginationItem button i {
+   z-index: 1;
+ }

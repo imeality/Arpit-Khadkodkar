@@ -31,3 +31,4 @@ export const editCorporateUser = (id, data) => {
 export const getRowsCount = () => {
     return instance.get('/users/rowsCount/');
 }
+    

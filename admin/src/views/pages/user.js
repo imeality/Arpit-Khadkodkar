@@ -15,6 +15,20 @@ constructor(props) {
             status:[],
             tableHeading:"",
             id:""
+        },
+        individualUserTable:{
+            rows:[{},{}],
+            headings:[],
+            status:[],
+            tableHeading:"",
+            id:""
+        },
+        corporateUserTable:{
+            rows:[{},{}],
+            headings:[],
+            status:[],
+            tableHeading:"",
+            id:""
         }
     }
 }
@@ -183,6 +197,7 @@ editCorporateInfo = (id, data, index) => {
         return (
           <div className="container tableContainer" >
             <CustomTable getData = {this.getUsers} getRowsCount = {this.getNumberOfRows} provided = "true" block = {this.block} unblock = {this.unblock} edit = {this.editUser} deleteIt = {this.deleteIt} id = {this.state.userTable.id} tableHeading = {this.state.userTable.tableHeading} status = {this.state.userTable.status} headings = {this.state.userTable.headings} rows = {this.state.userTable.rows}/>
+            {/* <CustomTable getData = {}/> */}
           </div>
         );
     }
