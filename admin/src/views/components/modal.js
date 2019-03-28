@@ -19,7 +19,7 @@ class EditModal extends React.Component {
   componentDidMount() {
       setTimeout(() => {
         this.setFormValues();
-        console.log("data in modal ",this.state.formValues);
+        //console.log("data in modal ",this.state.formValues);
       },200);
   }
 
@@ -56,12 +56,12 @@ class EditModal extends React.Component {
     }));
   }
 
-  onclick = (e) => {
+  onclick = () => {
     
     let id = this.state.formValues[this.props.id];
     let data = this.state.formValues;
     
-    //console.log(" ho ho ho => ", data);
+    console.log(" inside submit button of edit, data => ", data);
     this.props.edit(id, data, this.props.index);
   }
 

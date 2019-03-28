@@ -1,5 +1,5 @@
 import React from 'react';
- import {getRowsCount, getAllUsersWithPagination, blockUser, unblockUser, deleteUser, editInfo, editCorporateUser, editIndividualUser} from '../../api/users-api';
+import {getRowsCount, getAllUsersWithPagination, blockUser, unblockUser, deleteUser, editInfo, editCorporateUser, editIndividualUser} from '../../api/users-api';
 
 import CustomTable from '../components/table';
 

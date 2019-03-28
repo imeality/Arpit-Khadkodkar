@@ -108,23 +108,49 @@ router.post('/registration', (req,res) => { // for registration
     });
 });
 
-router.get('/all/:rowsCount/:offset', auth, (req, res) => { // admin can see all the moderators
+router.get('/rowscount', (req,res) => {
+    pool.getConnection((err,conn) => {
+        
+        if(err) {
+            console.log(err);
+            conn.release();
+            return res.status(500).end();
+        }
 
+        conn.query("select count(moderator_id) as sum from moderators", (err, result) => {
+
+            conn.release();
+            if(err) {
+                console.log(err);
+                return res.status(500).end();
+            }
+
+            return res.status(200).json({
+                data: result[0].sum
+            })
+        })
+    });
+});
+
+router.get('/all/:rowsCount/:offset', auth, (req, res) => { // admin can see all the moderators
+    //console.log("got a hit at moderators/all/limit/offset");
     pool.getConnection( (err, conn) => {
 
         if(err){
             conn.release();
+            //console.log("error in moderators/all/limit/offset in pool => ",err);
             return res.status(500).end();
         }
         
         conn.query( "select * from moderators limit ? offset ?",[parseInt(req.params.rowsCount),parseInt(req.params.offset)], (err, results) => {
             conn.release();
             if (err) {
+              //  console.log("error in moderators/all/limit/offset in conn => ",err);
                 return res.status(500).end();
             }
-
+            //console.log("data in moderators/all/limit/offset in conn => ",results);
             return res.status(200).json({
-                moderators: results
+                data: results
             });
         }) 
 
@@ -178,20 +204,22 @@ router.get('/count/temporary', auth, (req, res) => { // admin dashboard => count
 })
 
 router.delete('/delete/:moderator_id', (req, res) => { // delete account
-
+    //console.log("got a hit on delete/:moderator_id and id is => ",req.params.moderator_id);
     pool.getConnection( (err, conn) => {
 
         if (err) {
             conn.release();
+            console.log(err);
             return res.status(500).end();
         }
-
-        var sql = "update moderators set status = 'deleted' and password = '' where moderator_id = ?";
+        
+        var sql = "update moderators set status = 'deleted', password = '' where moderator_id = ?";
 
         conn.query( sql, req.params.moderator_id, (err, results) => {
 
             conn.release();
             if (err) {
+                console.log(err);
                 return res.status(500).end();
             }
 
@@ -209,10 +237,10 @@ router.patch('/edit/:moderator_id', (req, res) => { // edit profile
             return res.status(500).end();
         }
 
-        var sql = "update moderators set email = ?, name = ?, contact = ? where moderator_id = ?";
+        var sql = "update moderators set ? where moderator_id = ?";
         var data = req.body;
 
-        conn.query( sql, [data.email, data.name, data.contact_num], (err, results) => {
+        conn.query( sql, [req.body,req.params.moderator_id], (err, results) => {
             conn.release();
             if (err) {
                 return res.status(500).end();

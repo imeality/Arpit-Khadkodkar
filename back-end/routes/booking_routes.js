@@ -38,34 +38,81 @@ router.post('/add/:user_id/:sv_id', auth, (req, res) => { // user add booking
 
 });
 
+router.delete('/delete/:booking_id', auth, (req, res) => { // for admin dashboard => total number of bookings
+    
+    pool.getConnection( (err, conn) => {
 
-// router.get('/',  (req, res) => {
+        if ( err ) {
+            conn.release();
+            console.log(err);
+            return res.status(500).end();
+        }
 
-//     pool.getConnection( (err, conn) => {
+        var sql = "update bookings set status = 'deleted' where booking_id = ?";
+        conn.query( sql, req.params.booking_id, (err, result) => {
+
+            conn.release();
+            if ( err ) {
+                console.log(err);
+                return res.status(500).end();
+            }
+
+            return res.status(200).end();
+        })
+    });
+})
+
+router.get('/all/admin/:rowscount/:offset',  (req, res) => {
+
+    pool.getConnection( (err, conn) => {
         
-//         if (err) {
-//             conn.release();
-//             return res.status(500).end();
-//         }
-//         console.log(req.body);
-//         conn.query( " select * from bookings where ?", req.body, (err, results) => {
-//             conn.release();
+        if (err) {
+            conn.release();
+            console.log(err)
+            return res.status(500).end();
+        }
+     
+        conn.query( "select * from bookings limit ? offset ?",[parseInt(req.params.rowscount),parseInt(req.params.offset)], (err, results) => {
+            conn.release();
             
-//             if(err) {
-//                 console.log(err)
-//                 return res.status(500).end();
-//             }
-//             console.log("result ", results);
-//             return res.status(200).json({
-//                 data: results
-//             });
+            if(err) {
+                console.log(err)
+                return res.status(500).end();
+            }
+            //console.log("result ", results);
+            return res.status(200).json({
+                data: results
+            });
         
-//         });
-//     });
-// })
+        });
+    });
+})
 
+router.patch('/edit/:booking_id', auth, (req, res) => {
 
-router.get('/', auth, (req, res) => { // get booking for any kind
+    pool.getConnection( (err, conn) => {
+
+        if ( err ) {
+            conn.release();
+            console.log(err);
+            return res.status(500).end();
+        }
+       // console.log("inside bookings/edit/:booking_id data received => ",req);
+        var sql = "update bookings set ? where booking_id = ?";
+        conn.query( sql,[req.body, req.params.booking_id], (err, result) => {
+
+            conn.release();
+            if ( err ) {
+                console.log(err);
+                return res.status(500).end();
+            }
+
+            return res.status(200).end();
+        })
+    });
+});
+
+router.get('/all/front-end', auth, (req, res) => { // get booking for any kind
 
     var sql = "select * from bookings where ";
     var added = false;
@@ -162,7 +209,6 @@ router.get('/', auth, (req, res) => { // get booking for any kind
 
 });
 
-
 router.patch('/cancel/:booking_id', auth, (req, res) => {
 
     pool.getConnection( (err, conn) => {
@@ -185,6 +231,31 @@ router.patch('/cancel/:booking_id', auth, (req, res) => {
     });
 });
 
+router.get('/rowsCount',  (req, res) => { // for admin dashboard => total number of bookings
+    
+    pool.getConnection( (err, conn) => {
+
+        if ( err ) {
+            conn.release();
+            console.log(err);
+            return res.status(500).end();
+        }
+
+        var sql = "select count(booking_id) as sum from bookings";
+        conn.query( sql, (err, result) => {
+
+            conn.release();
+            if ( err ) {
+                console.log(err);
+                return res.status(500).end();
+            }
+
+            return res.status(200).json({
+                data: result[0].sum
+            });
+        })
+    });
+})
 
 router.get('/count', auth, (req, res) => { // for admin dashboard => total number of bookings
     
@@ -195,7 +266,7 @@ router.get('/count', auth, (req, res) => { // for admin dashboard => total numbe
             return res.status(500).end();
         }
 
-        var sql = "select count(booking_id) from bookings";
+        var sql = "select count(booking_id) from bookings where not status = 'deleted'";
         conn.query( sql, (err, result) => {
 
             conn.release();
@@ -287,7 +358,7 @@ router.get('/count/status/cancelled', auth, (req, res) => { // bookings number f
 
 router.get('/count/newBookings', auth, (req, res) => { // admin dashboard => new users in yesterday
 
-    pool.getConnection( (err, conn) => {
+    pool.getConnection( (err, conn) => { 
 
         if ( err ) {
             conn.release();

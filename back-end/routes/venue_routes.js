@@ -28,6 +28,7 @@ function getVenueId (conn, moderator_id, venue_name) {
     });
 }
 
+
 router.get('/filters/:skipRows/:numberOfRows', (req, res) => { // user can get venues on the basis of filters
     console.log("filters inside ",);
     pool.getConnection( (err, conn) => {
@@ -312,8 +313,6 @@ router.patch('/edit/:venue_id', (req, res) => { // edit venue details
                 error: error
             });
         })
-
-
     })
 });
 

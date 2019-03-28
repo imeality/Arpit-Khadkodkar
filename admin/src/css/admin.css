@@ -88,9 +88,9 @@
   color: whitesmoke;
  }
 
- .adminBlock {
+ body {
    background-color: #f1edf8;
-   height: 100vh;
+   /* height: 100%; */
  }
 
  .cards:hover {
@@ -105,6 +105,7 @@
    border-radius: 15px;
    background-color: #f5efff;
    box-shadow: 5px 5px #776e85;
+   margin-bottom: 100px;
  }
 
  .table-responsive {
@@ -140,12 +141,63 @@
   padding: 5px;
  }
 
- /* .theadFix{
-   position: fixed;
-   display: block !important;
-    
+ .status-confirmed{
+  color:white;
+  background-color: rgb(7, 100, 49);
+  border-radius: 4px;
+  height:25px !important;
+  padding: 5px;
  }
- */
+
+ .status-temporary{
+   color:white;
+   background-color: rgb(199, 101, 35);
+   border-radius: 4px;
+   height:25px !important;
+   padding: 5px;
+ }
+
+ .status-pending{
+  color:white;
+  background-color: rgb(184, 38, 164);
+  border-radius: 4px;
+  height:25px !important;
+  padding: 5px;
+ }
+
+ .status-resolved{
+  color:white;
+  background-color: rgb(38, 184, 111);
+  border-radius: 4px;
+  height:25px !important;
+  padding: 5px;
+ }
+
+ .status-done{
+  color:white;
+  background-color: rgb(38, 48, 184);
+  border-radius: 4px;
+  height:25px !important;
+  padding: 5px;
+ }
+
+ .status-cancelled{
+  color:white;
+  background-color: rgb(194, 32, 26);
+  border-radius: 4px;
+  height:25px !important;
+  padding: 5px;
+ }
+
+ .status-completed{
+  color:white;
+  background-color: rgb(26, 29, 194);
+  border-radius: 4px;
+  height:25px !important;
+  padding: 5px;
+ }
+
+
  .tableHeading {
    text-align: center !important;
  }

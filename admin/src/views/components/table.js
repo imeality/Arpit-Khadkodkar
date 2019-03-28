@@ -7,7 +7,7 @@ import GetPagination from './pagination';
 export default class CustomTable extends React.Component {
    
     render () {
-        var blocked;
+        var blocked,temporary;
 
 
         const getTableHeadings = headings => {
@@ -22,7 +22,11 @@ export default class CustomTable extends React.Component {
                 if (cstatus === ele) {
                     if(ele === "blocked"){
                         blocked = true;
+                    } else if(ele === "temporary") {
+                        
+                        temporary = true;
                     }
+                    //console.log(" inside getStatusCell in table:: status => ",ele); 
                     var temp = "status-"+ele;
                     return <td key = {ele}><span className = {temp}>{ele}</span></td>
                 }
@@ -32,8 +36,9 @@ export default class CustomTable extends React.Component {
         const getSingleRow = (row, index) => {
             //console.log(<tr key = {row.user_id}>{Object.keys(row).map( (element) => this.getSingleCell( row[element] ) )}</tr>);
             blocked = false;
+            temporary = false;
             var value;
-           
+           //console.log("in getSingleRow in table => ",row);
             return <React.Fragment>
                 
                 {Object.keys(row).map( element => {
@@ -43,14 +48,16 @@ export default class CustomTable extends React.Component {
                     }   
                     var ele = row[element]; 
                     if( element !== "status") {
-                        return <td key = {ele}>{ele}</td>
+                        //console.log(" element => ", element);
+                        let k = ""+element+ele;
+                        return <td key = {k}>{ele}</td>
                     } else{
                         return getStatusCell(ele);
                     }
                 })
                 }  
                  
-                <td>{this.props.provided === "true"? blocked === true ? <Button onClick = {() => this.props.unblock(value, index)} style = {{ marginBottom:5}} >Unblock</Button>:<Button onClick = {() => this.props.block(value, index)} style = {{ marginBottom:5}}>Block</Button> : ""}
+                <td>{this.props.provided === "true"? (blocked || temporary ? (!temporary?<Button onClick = {() => this.props.unblock(value, index)} style = {{ marginBottom:5}} >Unblock</Button>:<Button onClick = {() => this.props.unblock(value, index)} style = {{ marginBottom:5}} >Confirm</Button>)  : <Button onClick = {() => this.props.block(value, index)} style = {{ marginBottom:5}}>Block</Button> ): ""}
                 <Button style = {{ marginBottom:5}} onClick = {() => this.props.deleteIt(value, index)}>Delete</Button><EditModal index={index} id = {this.props.id} edit = {this.props.edit} data = {row} modalTitle = "Edit Info" buttonLabel = "Edit"/></td>   
                 
             </React.Fragment>

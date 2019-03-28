@@ -44,9 +44,9 @@ export default class GetPagination extends React.Component {
          var rows;
          await this.props.getRowsCount
          .then(count => rows = count)
-         .catch(error => console.log(error))
+         .catch(error => console.log("pagination error in getRowsCount => ",error))
 
-        //console.log(" rows => ", rows);
+        //console.log(" in pagination component rows => ", rows);
         this.setState({
             rowsCount:rows
         }, () => {
@@ -55,7 +55,7 @@ export default class GetPagination extends React.Component {
             //console.log(num);
             num = this.ceil(num);
             let temp = (num*10)-10;
-            console.log("temp is ",temp);
+            //console.log("in pagination temp is ",temp);
             this.setState({
                 numberOfPages: num,
                 prevDisable:true,
@@ -85,22 +85,22 @@ export default class GetPagination extends React.Component {
         var id = parseInt(event.target.id);
         var nextD=false, prevD=false, nextV=0, prevV=0;
         if(id === 1) {
-            console.log(" in first if ");
+            //console.log(" in first if ");
             prevD = true;
             nextV = 10;
             
         } else if (id === this.state.numberOfPages) {
-            console.log(" in second if ");
+            //console.log(" in second if ");
             nextD = true;
             prevV = (id-1)*10-10;
            
         } else {
         
-            console.log(" in else ");
+            //console.log(" in else ");
             nextV = (id+1)*10-10;
             prevV = (id-1)*10-10;
         }
-        console.log(" id is  ",id," prevD is ",prevD," nextD is ",nextD, " prevV is ",prevV," nextV is ",nextV," numberOfPages is ",this.state.numberOfPages);
+        //console.log(" id is  ",id," prevD is ",prevD," nextD is ",nextD, " prevV is ",prevV," nextV is ",nextV," numberOfPages is ",this.state.numberOfPages);
         await this.setState({
             current:id,
             prevDisable:prevD,
@@ -177,25 +177,31 @@ export default class GetPagination extends React.Component {
     // }
 
     render () {
-        return (
-            <Pagination>
-                <PaginationItem className = "paginationItem">
-                <Button value = "firstBut" data-id="firstBut" onClick = {(event) => {this.props.getRows(10, 0);this.changeStateButton(event)}}  disabled = {this.state.prevDisable}><i className = "fa fa-angle-double-left" aria-hidden="true"></i></Button>
-                </PaginationItem>
-                <PaginationItem className = "paginationItem">
-                <Button id = {this.state.prevId} data-id="prevBut" onClick = {(event) => {this.props.getRows(10, this.state.prev);this.changeStateButton(event)}} disabled = {this.state.prevDisable} ><i className="fa fa-angle-left" aria-hidden="true"></i></Button>
-                </PaginationItem>
+        const num = this.state.numberOfPages;
 
-                <PageItems getRows = {this.props.getRows} currentPage = {this.currentPage} numberOfPages = {this.state.numberOfPages}/>
+        if(num>1) {
+            return (
+                <Pagination>
+                    <PaginationItem className = "paginationItem">
+                    <Button value = "firstBut" data-id="firstBut" onClick = {(event) => {this.props.getRows(10, 0);this.changeStateButton(event)}}  disabled = {this.state.prevDisable}><i className = "fa fa-angle-double-left" aria-hidden="true"></i></Button>
+                    </PaginationItem>
+                    <PaginationItem className = "paginationItem">
+                    <Button id = {this.state.prevId} data-id="prevBut" onClick = {(event) => {this.props.getRows(10, this.state.prev);this.changeStateButton(event)}} disabled = {this.state.prevDisable} ><i className="fa fa-angle-left" aria-hidden="true"></i></Button>
+                    </PaginationItem>
+    
+                    <PageItems getRows = {this.props.getRows} currentPage = {this.currentPage} numberOfPages = {this.state.numberOfPages}/>
+    
+                    <PaginationItem className = "paginationItem">
+                    <Button id={this.state.nextId} data-id = "nextBut" onClick = {(event) => {this.props.getRows(10, this.state.next);this.changeStateButton(event)}} disabled = {this.state.nextDisable}><i className="fa fa-angle-right" aria-hidden="true"></i></Button>
+                    </PaginationItem>
+                    <PaginationItem className = "paginationItem">
+                    <Button data-id = "lastBut" onClick = {(event) => {this.props.getRows(10, this.state.last);this.changeStateButton(event)}} disabled = {this.state.nextDisable}><i className="fa fa-angle-double-right" aria-hidden="true"></i></Button>
+                    </PaginationItem>
+                </Pagination>
+            );
+        }
 
-                <PaginationItem className = "paginationItem">
-                <Button id={this.state.nextId} data-id = "nextBut" onClick = {(event) => {this.props.getRows(10, this.state.next);this.changeStateButton(event)}} disabled = {this.state.nextDisable}><i className="fa fa-angle-right" aria-hidden="true"></i></Button>
-                </PaginationItem>
-                <PaginationItem className = "paginationItem">
-                <Button data-id = "lastBut" onClick = {(event) => {this.props.getRows(10, this.state.last);this.changeStateButton(event)}} disabled = {this.state.nextDisable}><i className="fa fa-angle-double-right" aria-hidden="true"></i></Button>
-                </PaginationItem>
-            </Pagination>
-        );
+        return ("");
     }
 }
 
