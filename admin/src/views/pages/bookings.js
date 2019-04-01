@@ -13,7 +13,7 @@ export default class Bookings extends React.Component {
         super(props);
         this.state = {
             bookingTable:{
-                rows:[{},{}],           
+                rows:[],           
             }
         }
     }

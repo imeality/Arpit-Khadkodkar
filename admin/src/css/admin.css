@@ -87,12 +87,7 @@
   padding-bottom: 20px;
   color: whitesmoke;
  }
-
- body {
-   background-color: #f1edf8;
-   /* height: 100%; */
- }
-
+ 
  .cards:hover {
   background-color: rgb(116, 52, 235);
  }
@@ -101,10 +96,10 @@
  
    margin-top:45px;
    padding: 25px;
-   border: 2px solid rgb(118, 79, 158);
+
    border-radius: 15px;
-   background-color: #f5efff;
-   box-shadow: 5px 5px #776e85;
+   
+  
    margin-bottom: 100px;
  }
 

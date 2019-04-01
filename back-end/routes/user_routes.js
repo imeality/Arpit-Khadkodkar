@@ -154,7 +154,7 @@ router.post('/registration', (req,res) => {  // for registration
                         console.log("----  in insertIntoUsers Error ----- ", err)
                     } else {
                         console.log("----  in insertIntoUsers success ----- ", result);
-                        resolve (result.insertId);
+                        resolve (result.insertId); // insert command return the id of row at insertId
                         
                     }
                 });

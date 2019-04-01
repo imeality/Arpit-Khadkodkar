@@ -14,6 +14,231 @@ var moment = require('moment');
 
 var utility = require('../utilities/utility');
 
+router.patch('/block/:venue_id', (req, res) => { //  halt venue
+    //console.log("problem is not here ");
+    pool.getConnection( (err, conn) => {
+
+        if ( err ) {
+            conn.release();
+            
+            return res.status(500).end();
+        }
+        
+        conn.query("update venues set status = 'blocked' where venue_id = ?", req.params.venue_id, (err, result) => {
+         
+            if ( err ) {
+                conn.release();
+                return res.status(500).end();
+            }
+
+            conn.query("update subVenues set status = 'blocked' where venue_id = ?", req.params.venue_id, (err, result) => {
+
+                conn.release();
+                if ( err ) {
+                    return res.status(500).end();
+                }
+
+                return res.status(200).end();
+            })
+        })
+
+    });
+});
+
+router.patch('/unblock/:venue_id', (req, res) => { //  halt venue
+    //console.log("problem is not here ");
+    pool.getConnection( (err, conn) => {
+
+        if ( err ) {
+            conn.release();
+            
+            return res.status(500).end();
+        }
+        
+        conn.query("update venues set status = 'active' where venue_id = ?", req.params.venue_id, (err, result) => {
+         
+            if ( err ) {
+                conn.release();
+                return res.status(500).end();
+            }
+
+            conn.query("update subVenues set status = 'active' where venue_id = ?", req.params.venue_id, (err, result) => {
+
+                conn.release();
+                if ( err ) {
+                    return res.status(500).end();
+                }
+
+                return res.status(200).end();
+            })
+        })
+
+    });
+});
+
+router.get('/allrows/:rowscount/:offset', (req,res) => {
+
+    pool.getConnection( (err, conn) => {
+
+        if(err) {
+            console.log(err);
+            return res.status(500).end();
+        }
+
+        let venues=[],facilities=[],roomLayouts=[], types=[], rows;
+        let getVenues = new Promise( (resolve, reject) => {
+            
+            conn.query("select * from venues limit ? offset ?", [parseInt(req.params.rowscount), parseInt(req.params.offset)], (err, result) => {
+
+                if(err) {
+                    reject(err);
+                }
+                venues = result;
+                resolve("success");
+            });
+        });
+
+        let getFacilties = new Promise( (resolve, reject) => {
+
+            conn.query("select * from venueFacilities limit ? offset ?", [parseInt(req.params.rowscount), parseInt(req.params.offset)], (err, result) => {
+
+                if(err) {
+                    reject(err);
+                }
+                
+                let len = result.length;
+                rows = len;
+                for( let i=0; i<len; i++) {
+                    
+                    let facility="";
+                    delete result[i].venue_id;
+                    let other = result[i].others;
+                    delete result[i].others;
+                    let obj = result[i]; 
+                    
+                    Object.keys(obj).map( colName => {
+
+                        if(obj[colName] == 1) {
+                            facility += colName+", ";
+                        }
+                    })
+
+                    if(other !== "") {
+                        facility += other;
+                    } else {
+                        facility = facility.slice(0, facility.length-2);
+                    }
+ 
+                    facilities.push(facility);
+                }
+                
+                resolve("success");
+            });            
+        });
+
+        let getRooms = new Promise( (resolve, reject) => {
+
+            conn.query("select * from venueRoomLayout limit ? offset ?", [parseInt(req.params.rowscount), parseInt(req.params.offset)], (err, result) => {
+
+                if(err) {
+                    reject(err);
+                }
+                
+                let len = result.length;
+                
+                for( let i=0; i<len; i++) {
+                    
+                    let rooms="";
+                    delete result[i].venue_id;
+                    
+                    let obj = result[i]; 
+                    
+                    Object.keys(obj).map( colName => {
+
+                        if(obj[colName] !== 0 ) {
+                            rooms += colName+" = "+obj[colName]+", ";
+                        }
+                    })
+                    rooms = rooms.slice(0, rooms.length-2);
+                    roomLayouts.push(rooms);
+                }
+                
+                resolve("success");
+            });            
+        });
+
+        let getTypes = new Promise( (resolve, reject) => {
+
+            conn.query("select * from venueType limit ? offset ?", [parseInt(req.params.rowscount), parseInt(req.params.offset)], (err, result) => {
+
+                if(err) {
+                    reject(err);
+                }
+                
+                let len = result.length;
+                
+                for( let i=0; i<len; i++) {
+                    
+                    let type="";
+                    delete result[i].venue_id;
+                    let obj = result[i]; 
+                    
+                    Object.keys(obj).map( colName => {
+
+                        if(obj[colName] == 1) {
+                            type += colName+", ";
+                        }
+                    })
+                    
+                    type = type.slice(0, type.length-2);
+                    types.push(type);
+                }
+                
+                resolve("success");
+            });            
+        });
+
+        Promise.all([getVenues, getFacilties, getRooms, getTypes])
+        .then( () => {
+            conn.release();
+            
+            for( let i=0; i<rows; i++) {
+                venues[i].facilities = facilities[i];
+                venues[i].roomLayouts = roomLayouts[i];
+                venues[i].venueTypes = types[i];
+            }
+
+            //console.log(" /allrows/:rowscount/:offset in then result => ", venues);
+            return res.status(200).json({
+                data:venues
+            })
+        })
+        .catch( (err) => {
+            //console.log(" /allrows/:rowscount/:offset in catch error => ", err);
+            return res.status(500).end();
+        })
+    });
+});
+
+router.get('/rowsCount/', (req, res) => {
+    pool.getConnection((err, conn) => {
+        if(err) {
+            console.log(err);
+            return res.status(500).end();
+        }
+
+        conn.query("select count(venue_id) as sum from venues", (err, results) => {
+            conn.release();
+            if(err) {
+                console.log(err);
+                return res.status(500).end();
+            }
+            return res.status(200).json({
+                data: results[0].sum
+            });
+        });
+    });
+});
 
 function getVenueId (conn, moderator_id, venue_name) {
 
@@ -27,7 +252,6 @@ function getVenueId (conn, moderator_id, venue_name) {
         return result[0];
     });
 }
-
 
 router.get('/filters/:skipRows/:numberOfRows', (req, res) => { // user can get venues on the basis of filters
     console.log("filters inside ",);
@@ -244,14 +468,14 @@ router.get('/all/:venue_id', (req, res) => {  // get all information of a venue 
 });
 
 router.patch('/edit/:venue_id', (req, res) => { // edit venue details  
-    console.log("the problem is not here");
+    //console.log("the problem is not here");
     pool.getConnection( (err, conn) => {
 
         if ( err ) {
             conn.release();
             return res.status(500).end();
         }
-
+        //console.log("data received ",req.body);
         var venueId = req.params.venue_id;
         var data = req.body;
         var editVenueInfo = new Promise( (resolve, reject) => {
@@ -266,7 +490,7 @@ router.patch('/edit/:venue_id', (req, res) => { // edit venue details
                     }
             });
         });
-        console.log("facilities ",data.facilities);
+        //console.log("facilities ",data.facilities);
         var editVenueFacilities = new Promise( (resolve, reject) => {
 
             var value = venueFacilities.editVenueFacilities(data.facilities, venueId, conn);

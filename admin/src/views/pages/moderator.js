@@ -17,7 +17,7 @@ class Moderators extends Component {
         super(props);
         this.state = {
             moderatorTable:{
-                rows:[{},{}],
+                rows:[],
                 headings:[],
                 status:[],
                 tableHeading:"",

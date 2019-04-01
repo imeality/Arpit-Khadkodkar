@@ -10,7 +10,7 @@ constructor(props) {
     super(props);
     this.state = {
         userTable:{
-            rows:[{},{}],
+            rows:[],
             headings:[],
             status:[],
             tableHeading:"",
