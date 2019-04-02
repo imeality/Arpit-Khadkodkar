@@ -92,7 +92,7 @@
   background-color: rgb(116, 52, 235);
  }
 
- .tableContainer {
+ /* .tableContainer {
  
    margin-top:45px;
    padding: 25px;
@@ -101,7 +101,7 @@
    
   
    margin-bottom: 100px;
- }
+ } */
 
  .table-responsive {
   display: block;
@@ -195,6 +195,7 @@
 
  .tableHeading {
    text-align: center !important;
+   margin-left: 45%;
  }
 
  .paginationItem {
@@ -207,4 +208,20 @@
 
  .paginationItem button i {
    z-index: 1;
+ }
+
+ .pdfButton {
+   float: right;
+   background-color: #f1f1f1;
+   color: black;
+   margin:10px;
+   border: 0px;
+   box-shadow: 0ch;
+ }
+
+ .pdfButton:hover {
+  background-color: #cfcfcf;
+  color: black;
+  border: 0px;
+  box-shadow: 0ch;
  }

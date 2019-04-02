@@ -8,6 +8,8 @@ import {
     deleteEnquiry
 } from '../../api/enquiry-api';
 
+
+
 export default class Enquiry extends React.Component {
 
     constructor(props) {

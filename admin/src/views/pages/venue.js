@@ -60,8 +60,6 @@ export default class Venue extends React.Component {
     }
 
     editVenue = (id, row, index) => {
-
-        let c= [];
        
         let charArr = row.facilities.split(", ");
         let facilities = {};
@@ -89,7 +87,7 @@ export default class Venue extends React.Component {
         }
         let fOthers = "";
         for(let i=0; i<fLen; i++) {
-            if(charArr[i] != "") {
+            if(charArr[i] !== "") {
                 fOthers += charArr[i] + ", ";
             }
         }
